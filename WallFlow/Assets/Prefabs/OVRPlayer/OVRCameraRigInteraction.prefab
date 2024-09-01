@@ -41622,6 +41622,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6512447018831806737}
+  - component: {fileID: 2829363238593921859}
   m_Layer: 0
   m_Name: RightHandAnchor
   m_TagString: Untagged
@@ -41647,6 +41648,20 @@ Transform:
   - {fileID: 4897902553955890653}
   m_Father: {fileID: 7001071452653146961}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2829363238593921859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5929251442611022312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8bb2cb97c41d854998734d9991a0316, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ball: {fileID: 734819033935102306, guid: c379a8bdd59026a49a08dccfce024f19, type: 3}
+  speed: 5
 --- !u!1 &5931270137903170557
 GameObject:
   m_ObjectHideFlags: 0
@@ -58869,7 +58884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockId: e47682b9-c270-40b1-b16d-90b627a5ce1b
-  instanceId: 469a6a6e-5eb3-439f-befc-61bf1ca1248d
+  instanceId: f2f53054-a3e6-48b6-83f6-39c37c5d988b
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: 
