@@ -1,4 +1,5 @@
 using Meta.XR.MRUtilityKit;
+using Photon.Voice.PUN.UtilityScripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ public class MRUKDemo : MonoBehaviour
     public void EnableMRUKDemo()
     {
         sceneLoaded = true;
+        Debug.Log("EnableMRUKDemo Called");
     }
 
     private void BindRoomInfo(MRUKRoom room)
@@ -44,26 +46,30 @@ public class MRUKDemo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickDown))
+        spawneyes();
+    }
+
+    public void spawneyes()
+    {
+        if (wallAnchorObjectsCreated.Count == 0)
         {
-            if(wallAnchorObjectsCreated.Count == 0)
+            foreach (var wallAnchor in currentRoom.WallAnchors)
             {
-                foreach (var wallAnchor in currentRoom.WallAnchors)
-                {
-                    var createdWallObject = Instantiate(ObjectForWallAnchors, Vector3.zero, Quaternion.identity, wallAnchor.transform);
-                    createdWallObject.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-                }
-                Debug.Log("Wall Objects added to walls");
+                var createdWallObject = Instantiate(ObjectForWallAnchors, Vector3.zero, Quaternion.identity, wallAnchor.transform);
+                createdWallObject.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                wallAnchorObjectsCreated.Add(createdWallObject);
+                Debug.Log("Wall object created");
             }
-            else
+            Debug.Log("Wall Objects added to walls");
+        }
+        else
+        {
+            foreach (var wallObject in wallAnchorObjectsCreated)
             {
-                foreach(var wallObject in wallAnchorObjectsCreated) 
-                { 
-                    Destroy(wallObject);
-                }
-                wallAnchorObjectsCreated.Clear();
-                Debug.Log("Wall objects deleated");
+                Destroy(wallObject);
             }
+            wallAnchorObjectsCreated.Clear();
+            Debug.Log("Wall objects deleated");
         }
     }
 }
