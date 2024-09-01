@@ -11,9 +11,14 @@
     </activity>
     <meta-data android:name="unityplayer.SkipPermissionsDialog" android:value="false" />
     <meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only" />
-    <meta-data android:name="com.oculus.ossplash.background" android:value="black" />
+    <meta-data android:name="com.oculus.ossplash.background" android:value="passthrough-contextual" />
     <meta-data android:name="com.oculus.telemetry.project_guid" android:value="c571c211-80b4-4c68-ada1-db023238fe33" />
     <meta-data android:name="com.oculus.supportedDevices" android:value="quest|quest2|questpro|eureka" />
+    <meta-data android:name="com.oculus.handtracking.frequency" android:value="LOW" />
+    <meta-data android:name="com.oculus.handtracking.version" android:value="V2.0" />
+    <meta-data android:name="com.oculus.ossplash" android:value="true" />
+    <meta-data android:name="com.oculus.ossplash.type" android:value="mono" />
+    <meta-data android:name="com.oculus.ossplash.colorspace" android:value="P3" />
   </application>
   <uses-feature android:name="android.hardware.vr.headtracking" android:version="1" android:required="true" />
   <uses-permission android:name="com.oculus.permission.USE_ANCHOR_API" />
@@ -21,4 +26,9 @@
   <uses-permission android:name="com.oculus.permission.RENDER_MODEL" />
   <uses-feature android:name="com.oculus.feature.VIRTUAL_KEYBOARD" android:required="false" />
   <uses-permission android:name="com.oculus.permission.USE_SCENE" />
+  <uses-feature android:name="oculus.software.handtracking" android:required="false" />
+  <uses-permission android:name="com.oculus.permission.HAND_TRACKING" />
+  <uses-feature android:name="com.oculus.feature.PASSTHROUGH" android:required="false" />
+  <uses-feature android:name="oculus.software.eye_tracking" android:required="false" />
+  <uses-permission android:name="com.oculus.permission.EYE_TRACKING" />
 </manifest>
