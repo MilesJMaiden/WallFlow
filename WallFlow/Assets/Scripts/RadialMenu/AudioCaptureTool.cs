@@ -10,6 +10,8 @@ public class AudioCaptureTool : MonoBehaviour
     public Vector3 targetScale = new Vector3(1, 1, 1); // The final scale of the icon
     public float tweenTime = 1f;            // Duration for the initial tween animation
     public OVRInput.Button stopRecordingButton; // Button to stop recording, set via Inspector
+    public KeyCode testActivateKey = KeyCode.T; // Keyboard key to activate the tool (for testing)
+    public KeyCode testDeactivateKey = KeyCode.Y; // Keyboard key to deactivate the tool (for testing)
     public float doublePressTime = 0.5f;    // Time allowed between double presses
 
     private GameObject icon;                // The Icon GameObject
@@ -85,7 +87,7 @@ public class AudioCaptureTool : MonoBehaviour
     private void StartBobbingAnimation()
     {
         // Bobbing animation to indicate active listening
-        LeanTween.moveLocalY(icon, icon.transform.localPosition.y + 0.1f, 0.2f).setEase(LeanTweenType.easeInOutSine).setLoopPingPong();
+        LeanTween.moveLocalY(icon, icon.transform.localPosition.y + 0.1f, 0.5f).setEase(LeanTweenType.easeInOutSine).setLoopPingPong();
     }
 
     private void StopListening()
@@ -117,6 +119,18 @@ public class AudioCaptureTool : MonoBehaviour
                 StopListening(); // Stop the recording and animations
             }
             lastPressTime = Time.time;
+        }
+
+        // Keyboard input for testing activation
+        if (Input.GetKeyDown(testActivateKey))
+        {
+            ActivateTool();
+        }
+
+        // Keyboard input for testing deactivation
+        if (Input.GetKeyDown(testDeactivateKey))
+        {
+            DeactivateTool();
         }
     }
 
