@@ -1,44 +1,51 @@
 using UnityEngine;
-using UnityEngine.UI;
-using Meta.WitAi; // Assuming this namespace for Meta Voice SDK
+using Meta.WitAi;
+using Meta.WitAi.Events;
+using Oculus.Voice;
 
 public class AudioCaptureTool : MonoBehaviour
 {
     public Sprite iconSprite;               // Sprite to be used for the icon, assigned via the inspector
     public Transform targetPosition;        // The target position for the icon to move to
     public Transform startingPosition;      // The starting position for the icon, set via the Inspector
-    public Vector3 targetScale = new Vector3(1, 1, 1); // The final scale of the icon
+    public Vector3 targetScale = new Vector3(0.05f, 0.05f, 0.05f); // The final scale of the icon
     public float tweenTime = 1f;            // Duration for the initial tween animation
     public OVRInput.Button stopRecordingButton; // Button to stop recording, set via Inspector
-    public KeyCode testActivateKey = KeyCode.T; // Keyboard key to activate the tool (for testing)
-    public KeyCode testDeactivateKey = KeyCode.Y; // Keyboard key to deactivate the tool (for testing)
     public float doublePressTime = 0.5f;    // Time allowed between double presses
 
     private GameObject icon;                // The Icon GameObject
     private Vector3 initialScale;           // Initial scale of the icon
-
     private bool isRecording = false;
     private float lastPressTime = 0f;
+    private bool isBobbing = false;         // State to track if the icon is currently bobbing
 
-    // META Voice SDK variables
-    private Wit wit; // Reference to Wit component (assumes Wit.ai for voice recognition)
+    // Reference to AppVoiceExperience for voice interaction
+    [SerializeField] private AppVoiceExperience appVoiceExperience;
 
     private void Awake()
     {
-        // Find the Wit component in the scene (make sure it's set up)
-        wit = FindObjectOfType<Wit>();
-        if (wit == null)
+        // Check if AppVoiceExperience is set in the Inspector
+        if (appVoiceExperience == null)
         {
-            Debug.LogError("Wit component not found in the scene. Please add and configure Wit.");
+            Debug.LogError("AppVoiceExperience component not found. Please assign it in the Inspector.");
+            return;
         }
 
-        // Find or create the icon GameObject and set it up
+        // Ensure the AppVoiceExperience is properly initialized
+        appVoiceExperience.OnInitialized += () => Debug.Log("AppVoiceExperience initialized successfully.");
+
+        // Subscribe to voice events
+        appVoiceExperience.VoiceEvents.OnMicLevelChanged.AddListener(OnMicLevelChanged);
+        appVoiceExperience.VoiceEvents.OnStoppedListening.AddListener(OnStoppedListening);
+        appVoiceExperience.VoiceEvents.OnStartListening.AddListener(OnStartListening);
+
+        // Setup the icon GameObject
         if (icon == null)
         {
             icon = new GameObject("Icon");
             icon.transform.SetParent(transform, false); // Parent to the AudioCaptureTool GameObject
-            Image iconImage = icon.AddComponent<Image>();
-            iconImage.sprite = iconSprite;
+            SpriteRenderer iconSpriteRenderer = icon.AddComponent<SpriteRenderer>(); // Use SpriteRenderer for 3D sprite
+            iconSpriteRenderer.sprite = iconSprite; // Assign the sprite from the inspector
         }
 
         // Set initial state
@@ -47,16 +54,19 @@ public class AudioCaptureTool : MonoBehaviour
 
     private void ResetTool()
     {
-        // Ensure the tool is hidden and reset to its initial state
+        // Ensure the tool is hidden and reset all UI elements to their initial state
         icon.transform.localScale = Vector3.zero;
         icon.transform.position = startingPosition != null ? startingPosition.position : Vector3.zero;
         initialScale = targetScale;
+        LeanTween.cancel(icon); // Cancel any ongoing tweens to avoid conflicts
         gameObject.SetActive(false); // Initially set inactive
+        isBobbing = false;
     }
 
     public void ActivateTool()
     {
-        gameObject.SetActive(true); // Activate the tool
+        ResetTool();               // Reset UI elements before activating
+        gameObject.SetActive(true); // Enable the GameObject in the scene
         ShowVisuals();              // Start the visual animations
     }
 
@@ -75,29 +85,58 @@ public class AudioCaptureTool : MonoBehaviour
 
     private void StartListening()
     {
-        // Start listening using the Meta Voice SDK (Wit.ai)
-        if (wit != null)
+        // Use AppVoiceExperience to start listening
+        if (appVoiceExperience != null && !isRecording)
         {
-            wit.Activate(); // Begin voice capture
+            appVoiceExperience.Activate(); // Begin voice capture
             isRecording = true;
-            StartBobbingAnimation(); // Start bobbing animation to indicate listening
+        }
+    }
+
+    private void OnMicLevelChanged(float micLevel)
+    {
+        // Trigger bobbing if mic level indicates audio input is detected
+        if (micLevel > 0.1f && !isBobbing) // Adjust the threshold as necessary
+        {
+            StartBobbingAnimation();
         }
     }
 
     private void StartBobbingAnimation()
     {
-        // Bobbing animation to indicate active listening
-        LeanTween.moveLocalY(icon, icon.transform.localPosition.y + 0.1f, 0.5f).setEase(LeanTweenType.easeInOutSine).setLoopPingPong();
+        if (!isBobbing)
+        {
+            isBobbing = true;
+            // Bobbing animation between 0.1f and 0.2f on the Y axis
+            float bobRange = Random.Range(0.1f, 0.2f); // Random range for slight variation
+            LeanTween.moveLocalY(icon, icon.transform.localPosition.y + bobRange, 0.5f)
+                .setEase(LeanTweenType.easeInOutSine).setLoopPingPong();
+        }
+    }
+
+    private void OnStoppedListening()
+    {
+        // Stop bobbing when listening stops and reset icon to target position
+        isBobbing = false;
+        LeanTween.cancel(icon); // Stop the bobbing animation
+        LeanTween.move(icon, targetPosition.position, 0.5f).setEase(LeanTweenType.easeOutQuad); // Return smoothly to target position
+    }
+
+    private void OnStartListening()
+    {
+        // Reset bobbing state when listening starts
+        isBobbing = false;
+        LeanTween.cancel(icon); // Stop any previous animations
+        LeanTween.move(icon, targetPosition.position, 0.1f).setEase(LeanTweenType.easeOutQuad); // Ensure it's at target position
     }
 
     private void StopListening()
     {
-        if (wit != null && isRecording)
+        if (appVoiceExperience != null && isRecording)
         {
-            wit.Deactivate(); // Stop voice capture
+            appVoiceExperience.Deactivate(); // Stop voice capture
             isRecording = false;
-            LeanTween.cancel(icon); // Stop the bobbing animation
-            TweenToInitialState(); // Tween icon back to initial position and scale
+            OnStoppedListening(); // Reset the position
         }
     }
 
@@ -119,18 +158,6 @@ public class AudioCaptureTool : MonoBehaviour
                 StopListening(); // Stop the recording and animations
             }
             lastPressTime = Time.time;
-        }
-
-        // Keyboard input for testing activation
-        if (Input.GetKeyDown(testActivateKey))
-        {
-            ActivateTool();
-        }
-
-        // Keyboard input for testing deactivation
-        if (Input.GetKeyDown(testDeactivateKey))
-        {
-            DeactivateTool();
         }
     }
 

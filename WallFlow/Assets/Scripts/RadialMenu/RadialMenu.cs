@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,17 +21,15 @@ public class RadialMenu : MonoBehaviour
     private List<GameObject> spawnedSegments = new List<GameObject>();
     private int currentSelectedRadialSegment = -1;
 
-
     [SerializeField]
     private GameObject audioCaptureToolPrefab; // Prefab reference for AudioCaptureTool
 
     [SerializeField]
-    private AudioCaptureTool audioCaptureTool;
+    private AudioCaptureTool audioCaptureTool; // Reference to AudioCaptureTool in the scene
 
-    void Start()
-    {
-
-    }
+    // Keyboard keys for testing
+    public KeyCode testActivateKey = KeyCode.T; // Key to activate the AudioCaptureTool
+    public KeyCode testDeactivateKey = KeyCode.Y; // Key to deactivate the AudioCaptureTool
 
     void Update()
     {
@@ -49,6 +46,17 @@ public class RadialMenu : MonoBehaviour
         if (OVRInput.GetUp(spawnRadialMenuButton))
         {
             HideAndTriggerSelected();
+        }
+
+        // Check for test activation and deactivation keys
+        if (Input.GetKeyDown(testActivateKey))
+        {
+            ActivateAudioCaptureTool();
+        }
+
+        if (Input.GetKeyDown(testDeactivateKey))
+        {
+            DeactivateAudioCaptureTool();
         }
     }
 
@@ -164,7 +172,7 @@ public class RadialMenu : MonoBehaviour
         }
     }
 
-    // Define methods for each tool or logic to be executed for each segment
+    // Method to activate the AudioCaptureTool
     private void ExecuteAudioCaptureTool()
     {
         if (audioCaptureTool != null)
@@ -175,6 +183,31 @@ public class RadialMenu : MonoBehaviour
         else
         {
             Debug.LogError("AudioCaptureTool reference is not set in the Inspector.");
+        }
+    }
+
+    // Method for keyboard activation of the AudioCaptureTool
+    private void ActivateAudioCaptureTool()
+    {
+        if (audioCaptureTool != null)
+        {
+            audioCaptureTool.gameObject.SetActive(true); // Enable the GameObject
+            audioCaptureTool.ActivateTool(); // Start the UI effects
+            Debug.Log("Audio Capture Tool activated via keyboard.");
+        }
+        else
+        {
+            Debug.LogError("AudioCaptureTool reference is not set in the Inspector.");
+        }
+    }
+
+    // Method for keyboard deactivation of the AudioCaptureTool
+    private void DeactivateAudioCaptureTool()
+    {
+        if (audioCaptureTool != null && audioCaptureTool.gameObject.activeSelf)
+        {
+            audioCaptureTool.DeactivateTool(); // Reset and hide the tool
+            Debug.Log("Audio Capture Tool deactivated via keyboard.");
         }
     }
 
