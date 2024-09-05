@@ -45,10 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPrefabButton: 0
-  prefabs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  previewPrefab: {fileID: 734819033935102306, guid: 5726e6d5cc1f8ba4c8b0c42f4d887246, type: 3}
+  prefabs: []
+  previewPrefabs: []
+  prefabImages: []
