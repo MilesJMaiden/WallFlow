@@ -18538,9 +18538,57 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 310978186439578379, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1361972243294767978, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1848846577801997567, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3268750415848290780, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3798904333619408812, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4365211531953476429, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4499989961450066611, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
       propertyPath: m_Name
       value: Template Board
+      objectReference: {fileID: 0}
+    - target: {fileID: 4499989961450066611, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4898144779167139190, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5597584372580257596, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5957623762358434724, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7199991996023979760, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8512755423055707257, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8805617695462473215, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
       propertyPath: m_Pivot.x
@@ -18620,6 +18668,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8805617695462473215, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9129264636002524395, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -24460,8 +24512,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 440cc05bf7bfaf84ebad0346ad3f1cc4, type: 3}
   audioCaptureToolPrefab: {fileID: 1118609103}
   audioCaptureTool: {fileID: 1118609104}
-  testActivateKey: 116
-  testDeactivateKey: 121
+  prefabSpawnerTool: {fileID: 0}
+  testActivateAudioCaptureToolKey: 116
+  testDeactivateAudioCaptureToolKey: 121
+  testActivatePrefabSpawnerToolKey: 117
+  testDeactivatePrefabSpawnerToolKey: 105
 --- !u!4 &1551646780
 Transform:
   m_ObjectHideFlags: 0
