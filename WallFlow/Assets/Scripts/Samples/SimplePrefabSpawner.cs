@@ -57,7 +57,8 @@ public class SimplePrefabSpawner : MonoBehaviour
                 GameObject spawnedPrefab = Instantiate(prefabs[selectedPrefabIndex],
                                                        currentPreview.transform.position,
                                                        currentPreview.transform.rotation);
-                spawnedPrefab.transform.localScale = Vector3.one * scaleMultiplier; // Apply the current scale to the instantiated prefab
+                // Apply the current scale of the preview to the instantiated prefab
+                spawnedPrefab.transform.localScale = currentPreview.transform.localScale;
 
                 // Deactivate the tool after spawning
                 DeactivateTool();
@@ -109,7 +110,7 @@ public class SimplePrefabSpawner : MonoBehaviour
             // Instantiate the selected preview prefab for visualization
             currentPreview = Instantiate(previewPrefabs[selectedPrefabIndex]);
             currentPreview.SetActive(true); // Show the preview
-            currentPreview.transform.localScale = Vector3.one * scaleMultiplier; // Apply the initial scale
+            scaleMultiplier = currentPreview.transform.localScale.x; // Set initial scale based on preview prefab
 
             // Activate the spawner tool to start previewing
             ActivateTool();
