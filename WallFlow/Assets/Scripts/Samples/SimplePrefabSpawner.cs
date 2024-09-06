@@ -8,11 +8,14 @@ public class SimplePrefabSpawner : MonoBehaviour
     public OVRInput.Button spawnPrefabButton; // Button to spawn the prefab
     public GameObject[] prefabs;              // Array of prefabs to spawn
     public GameObject[] previewPrefabs;       // Array of preview prefabs with semi-transparent materials
-    public Image[] prefabImages;              // Array of UI images representing each prefab
+    public Sprite[] prefabImages;             // Array of sprites representing each prefab for UI
     public Transform controllerAnchor;        // Reference to the controller anchor for position adjustments
 
+    [SerializeField]
+    private Image selectedPrefabImage;        // UI element to display the currently selected prefab image
+
     private GameObject currentPreview;        // Current active preview instance
-    private int selectedPrefabIndex = 0;      // Index of the currently selected prefab
+    private int selectedPrefabIndex = -1;     // Index of the currently selected prefab, starts at -1 to indicate no selection
     private float previewDistance = 1f;       // Initial distance of the preview from the controller
     private float scaleMultiplier = 1f;       // Scale factor for the preview and instantiated prefabs
     private float scaleStep = 0.1f;           // Incremental step for scaling
@@ -20,17 +23,17 @@ public class SimplePrefabSpawner : MonoBehaviour
 
     void Start()
     {
-        // Instantiate the first preview prefab initially, but disable it until the tool is activated
+        // Initialize without any preview until a prefab is selected
         if (previewPrefabs.Length > 0)
         {
-            currentPreview = Instantiate(previewPrefabs[selectedPrefabIndex]);
-            currentPreview.SetActive(false); // Disable preview until tool is activated
+            currentPreview = null; // No preview active initially
         }
+        UpdatePrefabUI(selectedPrefabIndex);
     }
 
     void Update()
     {
-        if (!gameObject.activeSelf) return; // Return early if the tool is not active
+        if (!gameObject.activeSelf || selectedPrefabIndex < 0) return; // Return early if the tool is not active or no prefab is selected
 
         // Create a ray from the controller
         Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),
@@ -74,14 +77,20 @@ public class SimplePrefabSpawner : MonoBehaviour
     public void ActivateTool()
     {
         gameObject.SetActive(true);
-        currentPreview.SetActive(true); // Enable the preview
+        if (currentPreview != null)
+        {
+            currentPreview.SetActive(true); // Enable the preview if it exists
+        }
     }
 
     // Method to deactivate the spawner tool
     public void DeactivateTool()
     {
         gameObject.SetActive(false);
-        currentPreview.SetActive(false); // Disable the preview
+        if (currentPreview != null)
+        {
+            currentPreview.SetActive(false); // Disable the preview if it exists
+        }
     }
 
     // Method to set the selected prefab from the UI
@@ -96,8 +105,14 @@ public class SimplePrefabSpawner : MonoBehaviour
             {
                 Destroy(currentPreview);
             }
+
+            // Instantiate the selected preview prefab for visualization
             currentPreview = Instantiate(previewPrefabs[selectedPrefabIndex]);
-            currentPreview.SetActive(gameObject.activeSelf); // Match active state with tool
+            currentPreview.SetActive(true); // Show the preview
+            currentPreview.transform.localScale = Vector3.one * scaleMultiplier; // Apply the initial scale
+
+            // Activate the spawner tool to start previewing
+            ActivateTool();
 
             // Update UI to reflect the selected prefab
             UpdatePrefabUI(index);
@@ -108,13 +123,18 @@ public class SimplePrefabSpawner : MonoBehaviour
         }
     }
 
-    // Method to update UI to show the selected prefab
+    // Private method to update UI to show the selected prefab
     private void UpdatePrefabUI(int index)
     {
-        // Example logic to update UI images based on selection
-        for (int i = 0; i < prefabImages.Length; i++)
+        // Set the selected prefab image in the UI to reflect the current selection
+        if (selectedPrefabImage != null && index >= 0 && index < prefabImages.Length)
         {
-            prefabImages[i].color = i == index ? Color.white : Color.gray; // Highlight selected prefab image
+            selectedPrefabImage.sprite = prefabImages[index];
+            selectedPrefabImage.color = Color.white; // Highlight the selected image
+        }
+        else
+        {
+            selectedPrefabImage.color = Color.clear; // Clear selection if no valid index
         }
     }
 
