@@ -28,25 +28,25 @@ public class VoiceActivator : MonoBehaviour
 
 
         
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("Space key pressed in VoiceActivator!");
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Debug.Log("Space key pressed in VoiceActivator!");
 
             
-            if (!voiceManagerObject.activeInHierarchy)
-            {
-                voiceManagerObject.SetActive(true);
-                Debug.Log("VoiceActivator: VoiceManager object reactivated.");
+        //    if (!voiceManagerObject.activeInHierarchy)
+        //    {
+        //        voiceManagerObject.SetActive(true);
+        //        Debug.Log("VoiceActivator: VoiceManager object reactivated.");
 
                 
-                VoiceManager voiceManager = voiceManagerObject.GetComponent<VoiceManager>();
-                if (voiceManager != null)
-                {
-                    voiceManager.ReactivateVoice();
-                    Debug.Log("VoiceActivator: appVoiceExperience reactivated.");
-                }
-            }
-        }
+        //        VoiceManager voiceManager = voiceManagerObject.GetComponent<VoiceManager>();
+        //        if (voiceManager != null)
+        //        {
+        //            voiceManager.ReactivateVoice();
+        //            Debug.Log("VoiceActivator: appVoiceExperience reactivated.");
+        //        }
+        //    }
+        //}
 
        
     }

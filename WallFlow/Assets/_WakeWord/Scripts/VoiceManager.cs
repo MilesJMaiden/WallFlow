@@ -4,6 +4,7 @@ using TMPro;
 using Oculus.Voice;
 using System.Reflection;
 using Meta.WitAi.CallbackHandlers;
+using OpenAI;
 
 public class VoiceManager : MonoBehaviour
 {
@@ -11,7 +12,10 @@ public class VoiceManager : MonoBehaviour
     [SerializeField] private AppVoiceExperience appVoiceExperience;
     [SerializeField] private WitResponseMatcher responseMatcher;
     [SerializeField] private TextMeshProUGUI transcriptionText;
-    
+
+    [Header("DallE Reference")]
+    [SerializeField] private DallE dallE; // DallE 스크립트 참조
+
     [Header("Voice Events")]
     [SerializeField] private UnityEvent wakeWordDetected;
     [SerializeField] private UnityEvent<string> completeTranscription;
@@ -70,14 +74,16 @@ public class VoiceManager : MonoBehaviour
         _voiceCommandReady = false;
         completeTranscription?.Invoke(transcription);
 
-        // 트랜스크립션 완료 후 게임 오브젝트 비활성화
+        // DallE의 inputField에 텍스트 전달
+        dallE.SetInputFieldText(transcription);
+
         DeactivateVoiceObject();
     }
     
-    // 게임 오브젝트 비활성화 함수
+    
     private void DeactivateVoiceObject()
     {
-        // 해당 게임 오브젝트를 비활성화
+        
         this.gameObject.SetActive(false);
         Debug.Log("VoiceManager: GameObject has been deactivated.");
     }
