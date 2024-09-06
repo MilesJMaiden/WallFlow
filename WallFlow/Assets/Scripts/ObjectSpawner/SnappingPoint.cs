@@ -20,7 +20,7 @@ public class SnappingPoint : MonoBehaviour
     // 当对象进入触发区域时
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("GrabbableObject"))
+        if (other.CompareTag("SnapObject"))
         {
             if (silhouetteObject == null)
             {
@@ -34,11 +34,12 @@ public class SnappingPoint : MonoBehaviour
     }
 
     // 当对象失去抓取时，吸附到吸附点
-    public void SnapObject(GameObject grabbedObject)
+    public void SnapObject(GameObject snapObject)
     {
-        grabbedObject.transform.position = snapPoint.position;
-        grabbedObject.transform.rotation = snapPoint.rotation;
-        grabbedObject.GetComponent<Rigidbody>().isKinematic = true; // 锁定对象
+        Debug.Log(snapObject.name + "has been snapped");
+        snapObject.transform.position = snapPoint.position;
+        snapObject.transform.rotation = snapPoint.rotation;
+        snapObject.GetComponent<Rigidbody>().isKinematic = true; // 锁定对象
         audioSource.Play(); // 播放附加音效
     }
 }

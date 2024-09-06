@@ -5665,9 +5665,10 @@ GameObject:
   - component: {fileID: 5722265435979843599}
   - component: {fileID: 3943888393820368736}
   - component: {fileID: 4073579823348148010}
+  - component: {fileID: 7179607993385777940}
   m_Layer: 4
   m_Name: MasterSpawnerPrefab
-  m_TagString: Untagged
+  m_TagString: SnapObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5724,7 +5725,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -5900,6 +5901,21 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _sleepFrames: 0
+--- !u!114 &7179607993385777940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2194284327129687058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 363e1f57460056543bb3f50798345884, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualObject: {fileID: 3492248015859134926}
+  defaultMaterial: {fileID: -8771166627424403242, guid: fadab75994dc66e498ee857a07513046, type: 3}
+  silhouetteMaterial: {fileID: 2100000, guid: 75bba7f0afa709b4eb41ca3db1b29cf0, type: 2}
 --- !u!1 &2520884433319050538
 GameObject:
   m_ObjectHideFlags: 0
@@ -6534,7 +6550,7 @@ GameObject:
   - component: {fileID: 3371050804870590227}
   - component: {fileID: 3981914880709299099}
   m_Layer: 4
-  m_Name: MeshAll
+  m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
