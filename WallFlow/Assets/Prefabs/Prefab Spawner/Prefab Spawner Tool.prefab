@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d920d7b35356849a04c5235ef3629d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPrefabButton: 0
+  spawnPrefabButton: 2097152
   prefabs: []
   previewPrefabs: []
   prefabImages: []
+  controllerAnchor: {fileID: 0}
