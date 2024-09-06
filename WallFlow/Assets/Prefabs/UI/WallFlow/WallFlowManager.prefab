@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallFlowPrefab: {fileID: 9144767173166426895, guid: b284d6a5b89d4a446858c7b8db6c1d11, type: 3}
   wallPadding: 0.4
-  canvasOffset: 0.01
+  canvasOffset: 0.02
   toggleCanvasKey: 113
