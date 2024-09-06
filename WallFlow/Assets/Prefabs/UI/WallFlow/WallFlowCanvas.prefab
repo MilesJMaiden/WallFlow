@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3326735972274627853}
   - component: {fileID: 9071122411436184451}
   - component: {fileID: 5686835567166844684}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Surface
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 2077878482339430419}
   - component: {fileID: 5695482595160309884}
   - component: {fileID: 2329072672463740608}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,10 +171,10 @@ GameObject:
   - component: {fileID: 3318599798195422034}
   - component: {fileID: 2971112757257877904}
   - component: {fileID: 9037480288398937372}
-  m_Layer: 5
-  m_Name: WallFlowPrefab
+  m_Layer: 0
+  m_Name: WallFlowCanvas
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
