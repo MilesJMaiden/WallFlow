@@ -45,24 +45,24 @@ public class RadialMenu : MonoBehaviour
     [SerializeField]
     private AudioCaptureTool audioCaptureTool;
 
-    [Tooltip("Reference to the Prefab Spawner Tool in the scene.")]
-    [SerializeField]
-    private SimplePrefabSpawner prefabSpawnerTool;
+    [Tooltip("Reference to the Prefab Spawner in the scene.")]
+    public SimplePrefabSpawner prefabSpawnerTool;
 
-    #region Testing Keys
+    [Tooltip("Reference to the Prefab Spawner GameObject in the scene.")]
+    public GameObject prefabSpawnerToolObject;
+
     [Header("Testing Keyboard Shortcuts")]
-    [Tooltip("Key to activate the Audio Capture Tool.")]
-    public KeyCode testActivateAudioCaptureToolKey = KeyCode.T;
+    [Tooltip("Key to simulate selection of the first radial menu segment (Audio Capture Tool).")]
+    public KeyCode debugKeyForTool1 = KeyCode.Alpha1;
 
-    [Tooltip("Key to deactivate the Audio Capture Tool.")]
-    public KeyCode testDeactivateAudioCaptureToolKey = KeyCode.Y;
+    [Tooltip("Key to simulate selection of the second radial menu segment (Prefab Spawner Tool).")]
+    public KeyCode debugKeyForTool2 = KeyCode.Alpha2;
 
-    [Tooltip("Key to activate the Prefab Spawner Tool.")]
-    public KeyCode testActivatePrefabSpawnerToolKey = KeyCode.U;
+    [Tooltip("Key to simulate selection of the third radial menu segment (Tool 3).")]
+    public KeyCode debugKeyForTool3 = KeyCode.Alpha3;
 
-    [Tooltip("Key to deactivate the Prefab Spawner Tool.")]
-    public KeyCode testDeactivatePrefabSpawnerToolKey = KeyCode.I;
-    #endregion
+    [Tooltip("Key to simulate selection of the fourth radial menu segment (Tool 4).")]
+    public KeyCode debugKeyForTool4 = KeyCode.Alpha4;
 
     #endregion
 
@@ -76,7 +76,7 @@ public class RadialMenu : MonoBehaviour
     void Update()
     {
         HandleRadialMenuInput();
-        HandleTestingInput();
+        HandleKeyboardTestInput();
     }
 
     #endregion
@@ -246,14 +246,14 @@ public class RadialMenu : MonoBehaviour
     }
 
     /// <summary>
-    /// Executes the Prefab Spawner Tool.
+    /// Executes the Prefab Spawner Tool by activating it in the scene.
     /// </summary>
     private void ExecutePrefabSpawnerTool()
     {
         if (prefabSpawnerTool != null)
         {
             prefabSpawnerTool.ActivateTool(); // Activate the Prefab Spawner Tool
-            Debug.Log("Prefab Spawner Tool activated");
+            Debug.Log("Prefab Spawner Tool activated from Radial Menu.");
         }
         else
         {
@@ -278,86 +278,35 @@ public class RadialMenu : MonoBehaviour
     #region Testing Input Methods
 
     /// <summary>
-    /// Handles keyboard input for testing activation and deactivation of tools.
+    /// Handles keyboard input for testing activation of tools as if selected from the radial menu.
     /// </summary>
-    private void HandleTestingInput()
+    private void HandleKeyboardTestInput()
     {
-        // Check for test activation and deactivation keys
-        if (Input.GetKeyDown(testActivateAudioCaptureToolKey))
+        if (Input.GetKeyDown(debugKeyForTool1))
         {
-            ActivateAudioCaptureTool();
+            // Simulate selection of the first tool (e.g., Audio Capture Tool)
+            currentSelectedRadialSegment = 0;
+            HideAndTriggerSelected();
+            Debug.Log("Simulated selection of the first radial menu segment (Audio Capture Tool).");
         }
-
-        if (Input.GetKeyDown(testDeactivateAudioCaptureToolKey))
+        else if (Input.GetKeyDown(debugKeyForTool2))
         {
-            DeactivateAudioCaptureTool();
+            // Simulate selection of the second tool (e.g., Prefab Spawner Tool)
+            currentSelectedRadialSegment = 1;
+            HideAndTriggerSelected();
+            Debug.Log("Simulated selection of the second radial menu segment (Prefab Spawner Tool).");
         }
-
-        if (Input.GetKeyDown(testActivatePrefabSpawnerToolKey))
+        else if (Input.GetKeyDown(debugKeyForTool3))
         {
-            ActivatePrefabSpawnerTool();
+            currentSelectedRadialSegment = 2;
+            HideAndTriggerSelected();
+            Debug.Log("Simulated selection of the third radial menu segment (Tool 3).");
         }
-
-        if (Input.GetKeyDown(testDeactivatePrefabSpawnerToolKey))
+        else if (Input.GetKeyDown(debugKeyForTool4))
         {
-            DeactivatePrefabSpawnerTool();
-        }
-    }
-
-    /// <summary>
-    /// Method for keyboard activation of the AudioCaptureTool.
-    /// </summary>
-    private void ActivateAudioCaptureTool()
-    {
-        if (audioCaptureTool != null)
-        {
-            audioCaptureTool.gameObject.SetActive(true); // Enable the GameObject
-            audioCaptureTool.ActivateTool(); // Start the UI effects
-            Debug.Log("Audio Capture Tool activated via keyboard.");
-        }
-        else
-        {
-            Debug.LogError("AudioCaptureTool reference is not set in the Inspector.");
-        }
-    }
-
-    /// <summary>
-    /// Method for keyboard deactivation of the AudioCaptureTool.
-    /// </summary>
-    private void DeactivateAudioCaptureTool()
-    {
-        if (audioCaptureTool != null && audioCaptureTool.gameObject.activeSelf)
-        {
-            audioCaptureTool.DeactivateTool(); // Reset and hide the tool
-            Debug.Log("Audio Capture Tool deactivated via keyboard.");
-        }
-    }
-
-    /// <summary>
-    /// Method for keyboard activation of the Prefab Spawner Tool.
-    /// </summary>
-    private void ActivatePrefabSpawnerTool()
-    {
-        if (prefabSpawnerTool != null)
-        {
-            prefabSpawnerTool.ActivateTool(); // Activate the Prefab Spawner Tool
-            Debug.Log("Prefab Spawner Tool activated via keyboard.");
-        }
-        else
-        {
-            Debug.LogError("PrefabSpawnerTool reference is not set in the Inspector.");
-        }
-    }
-
-    /// <summary>
-    /// Method for keyboard deactivation of the Prefab Spawner Tool.
-    /// </summary>
-    private void DeactivatePrefabSpawnerTool()
-    {
-        if (prefabSpawnerTool != null && prefabSpawnerTool.gameObject.activeSelf)
-        {
-            prefabSpawnerTool.DeactivateTool(); // Reset and hide the tool
-            Debug.Log("Prefab Spawner Tool deactivated via keyboard.");
+            currentSelectedRadialSegment = 3;
+            HideAndTriggerSelected();
+            Debug.Log("Simulated selection of the fourth radial menu segment (Tool 4).");
         }
     }
 

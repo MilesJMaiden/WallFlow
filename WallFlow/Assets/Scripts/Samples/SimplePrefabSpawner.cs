@@ -34,11 +34,22 @@ public class SimplePrefabSpawner : MonoBehaviour
     [Tooltip("Padding applied around the canvas.")]
     public Vector2 canvasPadding = new Vector2(20f, 20f);
 
+    // Public property to access the canvas from other classes
+    public RectTransform Canvas => canvas;
+
+    // Public property to access selectedPrefabIndex
+    public int SelectedPrefabIndex => selectedPrefabIndex;
+
     private GameObject currentPreview;
     private int selectedPrefabIndex = -1; // Indicates no prefab is selected initially
 
+    // Reference to the main camera (user's headset)
+    private Camera mainCamera;
+
     private void Start()
     {
+        // Get the main camera reference (VR headset)
+        mainCamera = Camera.main;
         // Initially, do not instantiate any preview as no prefab is selected
         PopulateButtons();
     }
@@ -189,15 +200,51 @@ public class SimplePrefabSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Activates the spawner tool.
+    /// Activates the spawner tool and positions the canvas in front of the user.
     /// </summary>
     public void ActivateTool()
     {
-        // Ensure the tool is only activated when a prefab is selected
-        if (selectedPrefabIndex != -1)
+        gameObject.SetActive(true); // Always activate the spawner GameObject first
+        canvas.gameObject.SetActive(true); // Enable the selection UI canvas
+        PositionCanvasInFrontOfUser(); // Position the canvas in front of the headset
+        Debug.Log("Prefab Spawner Tool activated.");
+    }
+
+    /// <summary>
+    /// Positions the canvas 1.5 meters in front of the user's headset, aligning the canvas center with the user's forward view.
+    /// Moves the canvas up by half of its height to ensure proper alignment with the user's view.
+    /// </summary>
+    private void PositionCanvasInFrontOfUser()
+    {
+        if (mainCamera != null)
         {
-            gameObject.SetActive(true);
-            currentPreview.SetActive(true); // Enable the preview only when a prefab is selected
+            // Calculate the position 1.5 meters in front of the camera
+            Vector3 forwardPosition = mainCamera.transform.position + mainCamera.transform.forward * 1.5f;
+
+            // Calculate the center of the canvas in world space
+            Vector3 canvasCenter = canvas.TransformPoint(new Vector3(canvas.rect.width * 0.5f, -canvas.rect.height * 0.5f, 0));
+
+            // Calculate the offset needed to center the canvas in front of the user
+            Vector3 offset = canvas.position - canvasCenter;
+
+            // Set the canvas position to the adjusted forward position with the offset applied
+            canvas.position = forwardPosition + offset;
+
+            // Calculate the vertical offset to move the canvas up by half of its height
+            float halfCanvasHeightWorld = (canvas.rect.height * 0.5f) * canvas.lossyScale.y; // Adjust for canvas scale
+
+            // Adjust the canvas position upwards by half of its height
+            canvas.position += Vector3.up * halfCanvasHeightWorld;
+
+            // Set the rotation so that the canvas faces the user
+            canvas.rotation = Quaternion.LookRotation(forwardPosition - mainCamera.transform.position);
+
+            // Adjust the height to match the user's eye level
+            canvas.position = new Vector3(canvas.position.x, mainCamera.transform.position.y + halfCanvasHeightWorld, canvas.position.z);
+        }
+        else
+        {
+            Debug.LogError("Main camera reference is not set.");
         }
     }
 

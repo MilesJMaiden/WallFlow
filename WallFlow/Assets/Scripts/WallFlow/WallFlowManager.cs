@@ -14,6 +14,7 @@ public class WallFlowManager : MonoBehaviour
     private MRUKAnchor selectedWall;       // Reference to the selected wall anchor
     private RectTransform canvasRect;      // Reference to the Canvas RectTransform
     private BoundsClipper boundsClipper;   // Reference to the BoundsClipper component on 'Surface'
+    private BoxCollider wallFlowCollider;  // Reference to the BoxCollider of the wallFlowPrefab
 
     void Awake()
     {
@@ -55,9 +56,12 @@ public class WallFlowManager : MonoBehaviour
                 boundsClipper = surface.GetComponent<BoundsClipper>();
             }
 
-            if (canvasRect == null || boundsClipper == null)
+            // Find the BoxCollider attached to the wallFlowPrefab
+            wallFlowCollider = wallFlowInstance.GetComponent<BoxCollider>();
+
+            if (canvasRect == null || boundsClipper == null || wallFlowCollider == null)
             {
-                Debug.LogError("Canvas RectTransform or Surface's BoundsClipper component not found in WallFlow prefab.");
+                Debug.LogError("Canvas RectTransform, Surface's BoundsClipper component, or BoxCollider component not found in WallFlow prefab.");
                 yield break;
             }
 
@@ -100,6 +104,13 @@ public class WallFlowManager : MonoBehaviour
 
         // Apply the adjusted size to the 'Surface' BoundsClipper component
         boundsClipper.Size = new Vector3(canvasRect.sizeDelta.x, canvasRect.sizeDelta.y, 0.001f); // Match RectTransform and set Z to 0.001
+
+        // Scale the BoxCollider of the wallFlowInstance to match the size of the wallFlowInstance, only adjusting x and y
+        if (wallFlowCollider != null)
+        {
+            Vector3 newColliderSize = new Vector3(canvasRect.sizeDelta.x, canvasRect.sizeDelta.y, wallFlowCollider.size.z); // Keep Z axis unchanged
+            wallFlowCollider.size = newColliderSize;
+        }
     }
 
     private MRUKAnchor FindLargestWall(out Vector2 largestWallScale)
