@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class SnapObject : MonoBehaviour
 {
-    private Renderer objectRenderer;
+    public GameObject visualObject;
     public Material defaultMaterial;   // 默认材质
     public Material silhouetteMaterial; // Silhouette材质
+    private Renderer objectRenderer;
     private bool isGrabbed = false;
     private SnappingPoint snappingPoint;
 
     void Start()
     {
-        objectRenderer = GetComponent<Renderer>();
+        if (visualObject != null)
+        {
+            objectRenderer = visualObject.GetComponent<Renderer>();
+        }
     }
 
     // 检测手部进入碰撞区域时更换为Silhouette材质
@@ -31,7 +35,7 @@ public class SnapObject : MonoBehaviour
     // 当手部离开碰撞区域时恢复默认材质
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Hand"))
+        if (other.CompareTag("Hand") && objectRenderer != null)
         {
             objectRenderer.material = defaultMaterial;
         }
