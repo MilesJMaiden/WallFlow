@@ -35,25 +35,18 @@ public class SimplePrefabSpawner : MonoBehaviour
     public Vector2 canvasPadding = new Vector2(20f, 20f);
 
     private GameObject currentPreview;
-    private int selectedPrefabIndex = 0;
+    private int selectedPrefabIndex = -1; // Indicates no prefab is selected initially
 
     private void Start()
     {
-        // Instantiate the first preview prefab initially, but disable it until the tool is activated
-        if (previewPrefabs.Length > 0)
-        {
-            currentPreview = Instantiate(previewPrefabs[selectedPrefabIndex]);
-            currentPreview.SetActive(false); // Disable preview until tool is activated
-        }
-
-        // Populate the UI with buttons based on prefab images
+        // Initially, do not instantiate any preview as no prefab is selected
         PopulateButtons();
     }
 
     private void Update()
     {
-        // Ensure the tool is only active when the game object is active
-        if (!gameObject.activeSelf) return;
+        // Ensure the tool is only active when the game object is active and a prefab is selected
+        if (!gameObject.activeSelf || selectedPrefabIndex == -1) return;
 
         // Create a ray from the controller
         Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward);
@@ -176,13 +169,18 @@ public class SimplePrefabSpawner : MonoBehaviour
         {
             selectedPrefabIndex = index;
 
-            // Destroy the current preview and instantiate the new preview prefab
+            // Destroy the current preview if it exists
             if (currentPreview != null)
             {
                 Destroy(currentPreview);
             }
+
+            // Instantiate the preview prefab and set it to inactive initially
             currentPreview = Instantiate(previewPrefabs[selectedPrefabIndex]);
-            currentPreview.SetActive(gameObject.activeSelf); // Match active state with tool
+            currentPreview.SetActive(false);
+
+            // Disable the UI canvas after selecting a prefab
+            canvas.gameObject.SetActive(false);
         }
         else
         {
@@ -195,8 +193,12 @@ public class SimplePrefabSpawner : MonoBehaviour
     /// </summary>
     public void ActivateTool()
     {
-        gameObject.SetActive(true);
-        currentPreview.SetActive(true); // Enable the preview
+        // Ensure the tool is only activated when a prefab is selected
+        if (selectedPrefabIndex != -1)
+        {
+            gameObject.SetActive(true);
+            currentPreview.SetActive(true); // Enable the preview only when a prefab is selected
+        }
     }
 
     /// <summary>
@@ -205,6 +207,10 @@ public class SimplePrefabSpawner : MonoBehaviour
     public void DeactivateTool()
     {
         gameObject.SetActive(false);
-        currentPreview.SetActive(false); // Disable the preview
+        if (currentPreview != null)
+        {
+            currentPreview.SetActive(false); // Disable the preview
+        }
+        selectedPrefabIndex = -1; // Reset selection
     }
 }
