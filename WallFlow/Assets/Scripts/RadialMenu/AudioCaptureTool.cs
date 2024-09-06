@@ -21,23 +21,25 @@ public class AudioCaptureTool : MonoBehaviour
 
     // Reference to AppVoiceExperience for voice interaction
     [SerializeField] private AppVoiceExperience appVoiceExperience;
-
+    public GameObject appVoice;
+    [SerializeField] private GameObject voiceManagerObject;
     private void Awake()
     {
+        
         // Check if AppVoiceExperience is set in the Inspector
-        if (appVoiceExperience == null)
-        {
-            Debug.LogError("AppVoiceExperience component not found. Please assign it in the Inspector.");
-            return;
-        }
+        //if (appVoiceExperience == null)
+        //{
+        //    Debug.LogError("AppVoiceExperience component not found. Please assign it in the Inspector.");
+        //    return;
+        //}
 
         // Ensure the AppVoiceExperience is properly initialized
-        appVoiceExperience.OnInitialized += () => Debug.Log("AppVoiceExperience initialized successfully.");
+        //appVoiceExperience.OnInitialized += () => Debug.Log("AppVoiceExperience initialized successfully.");
 
         // Subscribe to voice events
-        appVoiceExperience.VoiceEvents.OnMicLevelChanged.AddListener(OnMicLevelChanged);
-        appVoiceExperience.VoiceEvents.OnStoppedListening.AddListener(OnStoppedListening);
-        appVoiceExperience.VoiceEvents.OnStartListening.AddListener(OnStartListening);
+        //appVoiceExperience.VoiceEvents.OnMicLevelChanged.AddListener(OnMicLevelChanged);
+        //appVoiceExperience.VoiceEvents.OnStoppedListening.AddListener(OnStoppedListening);
+        //appVoiceExperience.VoiceEvents.OnStartListening.AddListener(OnStartListening);
 
         // Setup the icon GameObject
         if (icon == null)
@@ -68,6 +70,13 @@ public class AudioCaptureTool : MonoBehaviour
         ResetTool();               // Reset UI elements before activating
         gameObject.SetActive(true); // Enable the GameObject in the scene
         ShowVisuals();              // Start the visual animations
+        appVoice.SetActive(true);
+        VoiceManager voiceManager = voiceManagerObject.GetComponent<VoiceManager>();
+        if (voiceManager != null)
+        {
+            voiceManager.ReactivateVoice();
+            Debug.Log("VoiceActivator: appVoiceExperience reactivated.");
+        }
     }
 
     public void DeactivateTool()
