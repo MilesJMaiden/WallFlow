@@ -41,27 +41,52 @@ namespace OpenAI
 
             if (response.Data != null && response.Data.Count > 0)
             {
-                using (var request = UnityWebRequestTexture.GetTexture(response.Data[0].Url))
+                string imageUrl = response.Data[0].Url;
+                Debug.Log($"Image URL received: {imageUrl}");
+
+                using (var request = UnityWebRequestTexture.GetTexture(imageUrl))
                 {
                     request.SetRequestHeader("Access-Control-Allow-Origin", "*");
                     request.SendWebRequest();
 
-                    // Correct way to await the completion of UnityWebRequest
+                    // Await the request completion
                     while (!request.isDone)
                     {
                         await Task.Yield();
                     }
 
+                    // Check if request succeeded
                     if (request.result == UnityWebRequest.Result.Success)
                     {
+                        Debug.Log("Image download successful.");
+
+                        // Get texture from the download handler
                         Texture2D texture = DownloadHandlerTexture.GetContent(request);
-                        var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero, 1f);
-                        image.sprite = sprite;
-                        Debug.Log("Image successfully assigned to the prefab.");
+                        if (texture != null)
+                        {
+                            Debug.Log("Texture loaded successfully.");
+
+                            // Create sprite from texture
+                            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero, 100.0f);
+                            if (sprite != null)
+                            {
+                                image.sprite = sprite;
+                                image.preserveAspect = true; // Ensure the aspect ratio is preserved
+                                Debug.Log("Image successfully assigned to the prefab.");
+                            }
+                            else
+                            {
+                                Debug.LogError("Failed to create sprite from texture.");
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogError("Texture is null after download.");
+                        }
                     }
                     else
                     {
-                        Debug.LogWarning("Failed to download image: " + request.error);
+                        Debug.LogWarning($"Failed to download image: {request.error}");
                     }
                 }
             }
