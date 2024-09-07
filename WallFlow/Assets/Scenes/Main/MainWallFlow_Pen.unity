@@ -1304,6 +1304,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2025775699 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2194469733519156608, guid: 4012effb460973a43bfcf9dc899fb093, type: 3}
+  m_PrefabInstance: {fileID: 2511391103454030617}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80f898a0f7992445b2c97ac1ea94597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2070258218
 GameObject:
   m_ObjectHideFlags: 0
@@ -1538,19 +1549,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6161526852454814128, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6161526852454814128, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2025775699}
     - target: {fileID: 6161526852454814128, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetActive
+      value: SpawnRandomObject
       objectReference: {fileID: 0}
     - target: {fileID: 6161526852454814128, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UnityEngine.GameObject, UnityEngine
+      value: SuperSimpleObjectSpawner, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 6161526852454814128, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
