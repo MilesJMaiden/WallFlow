@@ -103,7 +103,7 @@ public class SimplePrefabSpawner : MonoBehaviour
         float canvasHeight = canvas.rect.height;
 
         // Set to 4 buttons per row
-        int buttonsPerRow = 4;
+        int buttonsPerRow = 2;
         int rows = Mathf.CeilToInt(buttonCount / (float)buttonsPerRow);
 
         // Calculate button dimensions considering canvas padding and spacing
