@@ -1573,6 +1573,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2987681698813838313, guid: 33608f4ee7e359549bd154e1f4d9ae9c, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 5345316104009205285}
     - target: {fileID: 5004701275879680649, guid: 33608f4ee7e359549bd154e1f4d9ae9c, type: 3}
       propertyPath: m_Name
       value: Prefab Spawner Tool

@@ -44,7 +44,7 @@ public class SimplePrefabSpawner : MonoBehaviour
     private int selectedPrefabIndex = -1; // Indicates no prefab is selected initially
 
     // Reference to the main camera (user's headset)
-    private Camera mainCamera;
+    public Camera mainCamera;
 
     private void Start()
     {
