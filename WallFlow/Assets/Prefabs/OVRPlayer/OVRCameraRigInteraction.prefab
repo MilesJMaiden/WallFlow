@@ -14808,7 +14808,7 @@ MonoBehaviour:
   m_modelMetaTouchProRightController: {fileID: 314568307581535492}
   m_modelMetaTouchPlusLeftController: {fileID: 6888937572659468428}
   m_modelMetaTouchPlusRightController: {fileID: 7810839518856646223}
-  m_controller: 0
+  m_controller: 1
   m_showState: 1
   showWhenHandsArePoweredByNaturalControllerPoses: 0
   RayHelper: {fileID: 0}
@@ -42563,7 +42563,7 @@ MonoBehaviour:
   m_modelMetaTouchProRightController: {fileID: 9219395455978061412}
   m_modelMetaTouchPlusLeftController: {fileID: 2584331617631677203}
   m_modelMetaTouchPlusRightController: {fileID: 1658739589080284384}
-  m_controller: 0
+  m_controller: 2
   m_showState: 1
   showWhenHandsArePoweredByNaturalControllerPoses: 0
   RayHelper: {fileID: 0}
@@ -63464,6 +63464,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6537169640234019331}
+  - {fileID: 5949888014696374532}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8957995617807922184
@@ -65671,6 +65672,68 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1001 &5903282580122205891
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7433062367204986318}
+    m_Modifications:
+    - target: {fileID: 251800922802069447, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 251800922802069447, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 251800922802069447, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 251800922802069447, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 251800922802069447, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 251800922802069447, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 251800922802069447, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 251800922802069447, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 251800922802069447, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 251800922802069447, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610034068036545570, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: m_Name
+      value: ToolBelt
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+--- !u!4 &5949888014696374532 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 251800922802069447, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+  m_PrefabInstance: {fileID: 5903282580122205891}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8439395787911070724
 PrefabInstance:
   m_ObjectHideFlags: 0
