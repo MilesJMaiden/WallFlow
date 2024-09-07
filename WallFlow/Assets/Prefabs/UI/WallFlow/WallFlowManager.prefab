@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9449232cbbcc0d4a86125abd18030af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallFlowPrefab: {fileID: 9144767173166426895, guid: b284d6a5b89d4a446858c7b8db6c1d11, type: 3}
+  wallFlowPrefab: {fileID: 4499989961450066611, guid: cd940485ce472fc4a8b5e6b74fa0cb93, type: 3}
   wallPadding: 0.4
   canvasOffset: 0.02
   toggleCanvasKey: 113

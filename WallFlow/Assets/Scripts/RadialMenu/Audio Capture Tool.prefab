@@ -46,7 +46,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconSprite: {fileID: 21300000, guid: 464883c791528804496b8c8ef7126e52, type: 3}
   targetPosition: {fileID: 0}
-  targetScale: {x: 1, y: 1, z: 1}
+  startingPosition: {fileID: 0}
+  targetScale: {x: 0.1, y: 0.1, z: 0.1}
   tweenTime: 1
   stopRecordingButton: 8
   doublePressTime: 0.5
+  appVoiceExperience: {fileID: 0}
+  appVoice: {fileID: 0}
+  voiceManagerObject: {fileID: 0}
