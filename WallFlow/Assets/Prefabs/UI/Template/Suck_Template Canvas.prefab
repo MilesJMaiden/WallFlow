@@ -455,7 +455,7 @@ GameObject:
   - component: {fileID: 1912113903954140431}
   - component: {fileID: 310497334291208102}
   m_Layer: 5
-  m_Name: Template Canvas
+  m_Name: Suck_Template Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
