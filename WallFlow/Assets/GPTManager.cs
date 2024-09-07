@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
 using TMPro;
 using Oculus.Voice;
@@ -14,8 +13,9 @@ public class GPTManager : MonoBehaviour
     [SerializeField] private WitResponseMatcher responseMatcher;
     [SerializeField] private TextMeshProUGUI transcriptionText;
 
-    [Header("ChatGPT Reference")]
-    [SerializeField] private ChatGPT chatGPT;
+    [Header("Prefab Settings")]
+    [SerializeField] private GameObject chatGPTPrefab; // The UI prefab to instantiate
+    [SerializeField] private Camera mainCamera; // Reference to the player's main camera (headset)
 
     [Header("Voice Events")]
     [SerializeField] private UnityEvent wakeWordDetected;
@@ -34,7 +34,7 @@ public class GPTManager : MonoBehaviour
 
     private void Update()
     {
-        // Reactivate voice recognition every frame for testing purposes (optional depending on logic).
+        // Optional: Reactivate voice recognition on specific conditions or keys
         ReactivateVoice();
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -111,26 +111,52 @@ public class GPTManager : MonoBehaviour
         _voiceCommandReady = false;
         completeTranscription?.Invoke(transcription);
 
-        // Send transcription to ChatGPT for processing
-        if (chatGPT != null)
+        // Spawn the prefab and pass transcription to ChatGPTHandler
+        SpawnPrefabAndSetTranscription(transcription);
+
+        // Disable the manager after processing
+        gameObject.SetActive(false);
+        Debug.Log("GPTManager: GameObject has been deactivated.");
+    }
+
+    private void SpawnPrefabAndSetTranscription(string transcription)
+    {
+        // Instantiate the prefab in front of the player's head
+        GameObject chatGPTUI = Instantiate(chatGPTPrefab);
+        PositionPrefabInFrontOfPlayer(chatGPTUI);
+
+        // Access the ChatGPTHandler from the prefab
+        ChatGPTHandler chatGPTHandler = chatGPTUI.GetComponent<ChatGPTHandler>();
+        if (chatGPTHandler != null)
         {
-            chatGPT.SetInputFieldText(transcription);
+            chatGPTHandler.SetTextAndRequestResponse(transcription);
         }
         else
         {
-            Debug.LogWarning("ChatGPT reference is null. SetInputFieldText() not called.");
+            Debug.LogWarning("ChatGPTHandler component not found on the instantiated prefab.");
         }
-
-        // Deactivate voice recognition after processing
-        // DeactivateVoiceObject();
     }
 
-    /// <summary>
-    /// Deactivates the voice recognition object.
-    /// </summary>
-    private void DeactivateVoiceObject()
+    private void PositionPrefabInFrontOfPlayer(GameObject prefab)
     {
-        gameObject.SetActive(false);
-        Debug.Log("VoiceManager: GameObject has been deactivated.");
+        // Ensure mainCamera is assigned
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main; // Fallback to main camera
+            if (mainCamera == null)
+            {
+                Debug.LogError("Main camera is not assigned and could not be found.");
+                return;
+            }
+        }
+
+        // Position 1.5 meters in front of the player's head
+        Vector3 forwardPosition = mainCamera.transform.position + mainCamera.transform.forward * 1.5f;
+
+        // Set the prefab position
+        prefab.transform.position = forwardPosition;
+
+        // Rotate the prefab to face the player
+        prefab.transform.rotation = Quaternion.LookRotation(mainCamera.transform.forward, Vector3.up);
     }
 }
