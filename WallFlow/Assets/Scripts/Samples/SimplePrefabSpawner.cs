@@ -1,52 +1,73 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SimplePrefabSpawner : MonoBehaviour
 {
-    public OVRInput.Button spawnPrefabButton; // Button to spawn the prefab
-    public GameObject[] prefabs;              // Array of prefabs to spawn
-    public GameObject[] previewPrefabs;       // Array of preview prefabs with semi-transparent materials
-    public Sprite[] prefabImages;             // Array of sprites representing each prefab for UI
-    public Transform controllerAnchor;        // Reference to the controller anchor for position adjustments
+    [Header("Input Settings")]
+    [Tooltip("Button used to spawn the prefab.")]
+    public OVRInput.Button spawnPrefabButton;
 
-    [SerializeField]
-    private Image selectedPrefabImage;        // UI element to display the currently selected prefab image
+    [Header("Prefab Settings")]
+    [Tooltip("Array of prefabs to spawn.")]
+    public GameObject[] prefabs;
 
-    private GameObject currentPreview;        // Current active preview instance
-    private int selectedPrefabIndex = -1;     // Index of the currently selected prefab, starts at -1 to indicate no selection
-    private float previewDistance = 1f;       // Initial distance of the preview from the controller
-    private float scaleMultiplier = 1f;       // Scale factor for the preview and instantiated prefabs
-    private float scaleStep = 0.1f;           // Incremental step for scaling
-    private float positionStep = 0.1f;        // Incremental step for moving preview closer or farther
+    [Tooltip("Array of preview prefabs with semi-transparent materials.")]
+    public GameObject[] previewPrefabs;
 
-    void Start()
+    [Header("UI Settings")]
+    [Tooltip("Array of images representing each prefab.")]
+    public Sprite[] prefabImages;
+
+    [Tooltip("Canvas containing the button panel.")]
+    public RectTransform canvas;
+
+    [Tooltip("Panel inside the canvas that stretches to fit the canvas.")]
+    public RectTransform buttonPanel;
+
+    [Tooltip("Prefab for the button template used in the UI.")]
+    public GameObject buttonPrefab;
+
+    [Tooltip("Spacing between buttons in the grid layout.")]
+    public Vector2 buttonSpacing = new Vector2(10f, 10f);
+
+    [Tooltip("Padding applied around the canvas.")]
+    public Vector2 canvasPadding = new Vector2(20f, 20f);
+
+    // Public property to access the canvas from other classes
+    public RectTransform Canvas => canvas;
+
+    // Public property to access selectedPrefabIndex
+    public int SelectedPrefabIndex => selectedPrefabIndex;
+
+    private GameObject currentPreview;
+    private int selectedPrefabIndex = -1; // Indicates no prefab is selected initially
+
+    // Reference to the main camera (user's headset)
+    private Camera mainCamera;
+
+    private void Start()
     {
-        // Initialize without any preview until a prefab is selected
-        if (previewPrefabs.Length > 0)
-        {
-            currentPreview = null; // No preview active initially
-        }
-        UpdatePrefabUI(selectedPrefabIndex);
+        // Get the main camera reference (VR headset)
+        mainCamera = Camera.main;
+        // Initially, do not instantiate any preview as no prefab is selected
+        PopulateButtons();
     }
 
-    void Update()
+    private void Update()
     {
-        if (!gameObject.activeSelf || selectedPrefabIndex < 0) return; // Return early if the tool is not active or no prefab is selected
+        // Ensure the tool is only active when the game object is active and a prefab is selected
+        if (!gameObject.activeSelf || selectedPrefabIndex == -1) return;
 
         // Create a ray from the controller
-        Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch),
-                          OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward);
+        Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward);
 
+        // Raycast to find placement position for the prefab
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             // Update preview prefab position and rotation to match the raycast hit
-            Vector3 targetPosition = hit.point;
-            Vector3 offset = controllerAnchor.forward * previewDistance;
-            currentPreview.transform.position = targetPosition - offset;
+            currentPreview.transform.position = hit.point;
             currentPreview.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-            currentPreview.transform.localScale = Vector3.one * scaleMultiplier; // Apply scaling
 
             // Show preview while tool is active
             currentPreview.SetActive(true);
@@ -54,14 +75,9 @@ public class SimplePrefabSpawner : MonoBehaviour
             // Spawn the selected prefab when the assigned button is pressed
             if (OVRInput.GetDown(spawnPrefabButton))
             {
-                GameObject spawnedPrefab = Instantiate(prefabs[selectedPrefabIndex],
-                                                       currentPreview.transform.position,
-                                                       currentPreview.transform.rotation);
-                // Apply the current scale of the preview to the instantiated prefab
-                spawnedPrefab.transform.localScale = currentPreview.transform.localScale;
-
-                // Deactivate the tool after spawning
-                DeactivateTool();
+                GameObject spawnedPrefab = Instantiate(prefabs[selectedPrefabIndex], hit.point, Quaternion.FromToRotation(Vector3.up, hit.normal));
+                spawnedPrefab.transform.localScale = currentPreview.transform.localScale; // Match scale of the preview
+                DeactivateTool(); // Deactivate the tool after spawning
             }
         }
         else
@@ -69,54 +85,113 @@ public class SimplePrefabSpawner : MonoBehaviour
             // Hide the preview if no valid hit is detected
             currentPreview.SetActive(false);
         }
-
-        // Handle thumbstick input for adjustments
-        HandleThumbstickInput();
     }
 
-    // Method to activate the spawner tool
-    public void ActivateTool()
+    /// <summary>
+    /// Populates the UI with buttons representing each prefab.
+    /// </summary>
+    private void PopulateButtons()
     {
-        gameObject.SetActive(true);
-        if (currentPreview != null)
+        int buttonCount = prefabImages.Length;
+
+        // Set anchors and pivot of the canvas to the top-left
+        canvas.anchorMin = new Vector2(0, 1);
+        canvas.anchorMax = new Vector2(0, 1);
+        canvas.pivot = new Vector2(0, 1);
+
+        float canvasWidth = canvas.rect.width;
+        float canvasHeight = canvas.rect.height;
+
+        // Set to 4 buttons per row
+        int buttonsPerRow = 4;
+        int rows = Mathf.CeilToInt(buttonCount / (float)buttonsPerRow);
+
+        // Calculate button dimensions considering canvas padding and spacing
+        float availableWidth = canvasWidth - canvasPadding.x * 2; // Total width minus padding
+        float maxButtonWidth = (availableWidth - (buttonsPerRow - 1) * buttonSpacing.x) / buttonsPerRow;
+        float maxButtonHeight = maxButtonWidth / 16f * 9f; // Maintain a 16:9 aspect ratio
+
+        // Calculate the total height needed and adjust canvas height if necessary
+        float totalButtonHeight = rows * maxButtonHeight + (rows - 1) * buttonSpacing.y;
+
+        if (totalButtonHeight > canvasHeight)
         {
-            currentPreview.SetActive(true); // Enable the preview if it exists
+            canvasHeight = totalButtonHeight + canvasPadding.y * 2; // Add padding to the height
+            canvas.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvasHeight);
+        }
+
+        // Calculate starting X and Y positions based on padding
+        float startX = canvasPadding.x;
+        float startY = -canvasPadding.y; // Start from the top with padding
+
+        for (int i = 0; i < buttonCount; i++)
+        {
+            GameObject buttonObject = Instantiate(buttonPrefab, buttonPanel);
+            RectTransform buttonRect = buttonObject.GetComponent<RectTransform>();
+
+            // Set anchors and pivot of the button to the top-left
+            buttonRect.anchorMin = new Vector2(0, 1);
+            buttonRect.anchorMax = new Vector2(0, 1);
+            buttonRect.pivot = new Vector2(0, 1);
+
+            Button button = buttonObject.GetComponent<Button>();
+            Image buttonImage = buttonObject.GetComponent<Image>();
+
+            // Set the button's image
+            if (buttonImage != null && i < prefabImages.Length)
+            {
+                buttonImage.sprite = prefabImages[i];
+                buttonImage.preserveAspect = true; // Preserve the image's aspect ratio
+            }
+
+            // Position buttons in a grid, starting from the top-left
+            int row = i / buttonsPerRow;
+            int column = i % buttonsPerRow;
+
+            // Calculate X and Y position
+            float xPos = startX + column * (maxButtonWidth + buttonSpacing.x);
+            float yPos = startY - row * (maxButtonHeight + buttonSpacing.y);
+
+            // Set button size and position
+            buttonRect.sizeDelta = new Vector2(maxButtonWidth, maxButtonHeight);
+            buttonRect.anchoredPosition = new Vector2(xPos, yPos);
+
+            // Assign click event
+            int index = i; // Capture the current index
+            button.onClick.AddListener(() => OnPrefabButtonClicked(index));
+        }
+
+        // Adjust the canvas width to fit buttons, considering padding
+        float totalWidth = buttonsPerRow * maxButtonWidth + (buttonsPerRow - 1) * buttonSpacing.x;
+        if (totalWidth + canvasPadding.x * 2 > canvasWidth)
+        {
+            canvasWidth = totalWidth + canvasPadding.x * 2;
+            canvas.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvasWidth);
         }
     }
 
-    // Method to deactivate the spawner tool
-    public void DeactivateTool()
+    /// <summary>
+    /// Handles the button click event to select a prefab.
+    /// </summary>
+    /// <param name="index">Index of the selected prefab.</param>
+    private void OnPrefabButtonClicked(int index)
     {
-        gameObject.SetActive(false);
-        if (currentPreview != null)
-        {
-            currentPreview.SetActive(false); // Disable the preview if it exists
-        }
-    }
-
-    // Method to set the selected prefab from the UI
-    public void SetSelectedPrefab(int index)
-    {
-        if (index >= 0 && index < prefabs.Length && index < previewPrefabs.Length && index < prefabImages.Length)
+        if (index >= 0 && index < prefabs.Length && index < previewPrefabs.Length)
         {
             selectedPrefabIndex = index;
 
-            // Destroy the current preview and instantiate the new preview prefab
+            // Destroy the current preview if it exists
             if (currentPreview != null)
             {
                 Destroy(currentPreview);
             }
 
-            // Instantiate the selected preview prefab for visualization
+            // Instantiate the preview prefab and set it to inactive initially
             currentPreview = Instantiate(previewPrefabs[selectedPrefabIndex]);
-            currentPreview.SetActive(true); // Show the preview
-            scaleMultiplier = currentPreview.transform.localScale.x; // Set initial scale based on preview prefab
+            currentPreview.SetActive(false);
 
-            // Activate the spawner tool to start previewing
-            ActivateTool();
-
-            // Update UI to reflect the selected prefab
-            UpdatePrefabUI(index);
+            // Disable the UI canvas after selecting a prefab
+            canvas.gameObject.SetActive(false);
         }
         else
         {
@@ -124,44 +199,65 @@ public class SimplePrefabSpawner : MonoBehaviour
         }
     }
 
-    // Private method to update UI to show the selected prefab
-    private void UpdatePrefabUI(int index)
+    /// <summary>
+    /// Activates the spawner tool and positions the canvas in front of the user.
+    /// </summary>
+    public void ActivateTool()
     {
-        // Set the selected prefab image in the UI to reflect the current selection
-        if (selectedPrefabImage != null && index >= 0 && index < prefabImages.Length)
+        gameObject.SetActive(true); // Always activate the spawner GameObject first
+        canvas.gameObject.SetActive(true); // Enable the selection UI canvas
+        PositionCanvasInFrontOfUser(); // Position the canvas in front of the headset
+        Debug.Log("Prefab Spawner Tool activated.");
+    }
+
+    /// <summary>
+    /// Positions the canvas 1.5 meters in front of the user's headset, aligning the canvas center with the user's forward view.
+    /// Moves the canvas up by half of its height to ensure proper alignment with the user's view.
+    /// </summary>
+    private void PositionCanvasInFrontOfUser()
+    {
+        if (mainCamera != null)
         {
-            selectedPrefabImage.sprite = prefabImages[index];
-            selectedPrefabImage.color = Color.white; // Highlight the selected image
+            // Calculate the position 1.5 meters in front of the camera
+            Vector3 forwardPosition = mainCamera.transform.position + mainCamera.transform.forward * 1.5f;
+
+            // Calculate the center of the canvas in world space
+            Vector3 canvasCenter = canvas.TransformPoint(new Vector3(canvas.rect.width * 0.5f, -canvas.rect.height * 0.5f, 0));
+
+            // Calculate the offset needed to center the canvas in front of the user
+            Vector3 offset = canvas.position - canvasCenter;
+
+            // Set the canvas position to the adjusted forward position with the offset applied
+            canvas.position = forwardPosition + offset;
+
+            // Calculate the vertical offset to move the canvas up by half of its height
+            float halfCanvasHeightWorld = (canvas.rect.height * 0.5f) * canvas.lossyScale.y; // Adjust for canvas scale
+
+            // Adjust the canvas position upwards by half of its height
+            canvas.position += Vector3.up * halfCanvasHeightWorld;
+
+            // Set the rotation so that the canvas faces the user
+            canvas.rotation = Quaternion.LookRotation(forwardPosition - mainCamera.transform.position);
+
+            // Adjust the height to match the user's eye level
+            canvas.position = new Vector3(canvas.position.x, mainCamera.transform.position.y + halfCanvasHeightWorld, canvas.position.z);
         }
         else
         {
-            selectedPrefabImage.color = Color.clear; // Clear selection if no valid index
+            Debug.LogError("Main camera reference is not set.");
         }
     }
 
-    // Method to handle thumbstick input for position and scale adjustments
-    private void HandleThumbstickInput()
+    /// <summary>
+    /// Deactivates the spawner tool.
+    /// </summary>
+    public void DeactivateTool()
     {
-        Vector2 thumbstickInput = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick); // Read thumbstick input
-
-        // Adjust distance to raycast hit point with thumbstick up/down
-        if (thumbstickInput.y > 0.1f)
+        gameObject.SetActive(false);
+        if (currentPreview != null)
         {
-            previewDistance = Mathf.Max(0.1f, previewDistance - positionStep); // Move closer to the raycast point
+            currentPreview.SetActive(false); // Disable the preview
         }
-        else if (thumbstickInput.y < -0.1f)
-        {
-            previewDistance += positionStep; // Move closer to the controller
-        }
-
-        // Adjust scale with thumbstick left/right
-        if (thumbstickInput.x > 0.1f)
-        {
-            scaleMultiplier += scaleStep; // Increase scale
-        }
-        else if (thumbstickInput.x < -0.1f)
-        {
-            scaleMultiplier = Mathf.Max(0.1f, scaleMultiplier - scaleStep); // Decrease scale
-        }
+        selectedPrefabIndex = -1; // Reset selection
     }
 }
