@@ -1,47 +1,22 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
+using TMPro;
 using Oculus.Voice;
 using System.Reflection;
 using Meta.WitAi.CallbackHandlers;
-using OpenAI;
-using UnityEngine.Networking;
-using System.Threading.Tasks;
 
-public class DalleManager : MonoBehaviour
+public class VoiceManager2 : MonoBehaviour
 {
     [Header("Wit Configuration")]
     [SerializeField] private AppVoiceExperience appVoiceExperience;
     [SerializeField] private WitResponseMatcher responseMatcher;
-
-    [Header("Prefab Settings")]
-    [SerializeField] private GameObject resultPrefab; // The UI prefab to instantiate
-    [SerializeField] private Camera mainCamera; // Reference to the player's main camera (headset)
+    [SerializeField] private TextMeshProUGUI transcriptionText;
 
     [Header("Voice Events")]
     [SerializeField] private UnityEvent wakeWordDetected;
     [SerializeField] private UnityEvent<string> completeTranscription;
 
     private bool _voiceCommandReady;
-    private bool isFirstDeactivationDone = false;
-
-    private void Start()
-    {
-        if (!isFirstDeactivationDone)
-        {
-            isFirstDeactivationDone = true;
-        }
-    }
-
-    private void Update()
-    {
-        ReactivateVoice();
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ReactivateVoice();
-        }
-    }
 
     private void Awake()
     {
@@ -56,13 +31,17 @@ public class DalleManager : MonoBehaviour
         }
 
         appVoiceExperience.Activate();
+
     }
+
+
 
     private void OnDestroy()
     {
         appVoiceExperience.VoiceEvents.OnRequestCompleted.RemoveListener(ReactivateVoice);
         appVoiceExperience.VoiceEvents.OnPartialTranscription.RemoveListener(OnPartialTranscription);
         appVoiceExperience.VoiceEvents.OnFullTranscription.RemoveListener(OnFullTranscription);
+
 
         var eventField = typeof(WitResponseMatcher).GetField("onMultiValueEvent", BindingFlags.NonPublic | BindingFlags.Instance);
         if (eventField != null && eventField.GetValue(responseMatcher) is MultiValueEvent onMultiValueEvent)
@@ -82,7 +61,7 @@ public class DalleManager : MonoBehaviour
     private void OnPartialTranscription(string transcription)
     {
         if (!_voiceCommandReady) return;
-        // Handle partial transcription if needed (currently not used).
+        transcriptionText.text = transcription;
     }
 
     private void OnFullTranscription(string transcription)
@@ -91,48 +70,15 @@ public class DalleManager : MonoBehaviour
         _voiceCommandReady = false;
         completeTranscription?.Invoke(transcription);
 
-        // Spawn the prefab and pass transcription to DallEHandler
-        SpawnPrefabAndSetTranscription(transcription);
+        // 트랜스크립션 완료 후 게임 오브젝트 비활성화
+        DeactivateVoiceObject();
     }
 
-    private void SpawnPrefabAndSetTranscription(string transcription)
+    // 게임 오브젝트 비활성화 함수
+    private void DeactivateVoiceObject()
     {
-        // Instantiate the prefab in front of the player's head
-        GameObject resultUI = Instantiate(resultPrefab);
-        PositionPrefabInFrontOfPlayer(resultUI);
-
-        // Access the DallEHandler from the prefab
-        DallEHandler dallEHandler = resultUI.GetComponent<DallEHandler>();
-        if (dallEHandler != null)
-        {
-            dallEHandler.SetInputFieldText(transcription);
-        }
-        else
-        {
-            Debug.LogWarning("DallEHandler component not found on the instantiated prefab.");
-        }
-    }
-
-    private void PositionPrefabInFrontOfPlayer(GameObject prefab)
-    {
-        // Ensure mainCamera is assigned
-        if (mainCamera == null)
-        {
-            mainCamera = Camera.main; // Fallback to main camera
-            if (mainCamera == null)
-            {
-                Debug.LogError("Main camera is not assigned and could not be found.");
-                return;
-            }
-        }
-
-        // Position 1.5 meters in front of the player's head
-        Vector3 forwardPosition = mainCamera.transform.position + mainCamera.transform.forward * 1.5f;
-
-        // Set the prefab position
-        prefab.transform.position = forwardPosition;
-
-        // Rotate the prefab to face the player
-        prefab.transform.rotation = Quaternion.LookRotation(mainCamera.transform.forward, Vector3.up);
+        // 해당 게임 오브젝트를 비활성화
+        this.gameObject.SetActive(false);
+        Debug.Log("VoiceManager: GameObject has been deactivated.");
     }
 }
