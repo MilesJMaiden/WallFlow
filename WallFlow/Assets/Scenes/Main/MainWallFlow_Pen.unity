@@ -1531,6 +1531,22 @@ PrefabInstance:
       propertyPath: oVRPassthroughLayer
       value: 
       objectReference: {fileID: 464970113}
+    - target: {fileID: 482200772353639665, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 917d2811e8ab29b4da7458f550310dd7, type: 2}
+    - target: {fileID: 1987690719837449712, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6561196d04c845b42bed88f45c71feec, type: 2}
+    - target: {fileID: 3597223444949398663, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c1f8d0fe1c72ee14885f679a96ed0106, type: 2}
+    - target: {fileID: 3804121325705139238, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b074b8e07b1b49242b5215c32bead0cb, type: 2}
     - target: {fileID: 4432322399895871627, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1611,6 +1627,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8328654991247350987, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 055413f1d5447d443b7afdd0ccb8cb9a, type: 2}
     - target: {fileID: 8853340313016428646, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
