@@ -22,7 +22,13 @@ public class AudioCaptureTool : MonoBehaviour
     // Reference to AppVoiceExperience for voice interaction
     [SerializeField] private AppVoiceExperience appVoiceExperience;
     public GameObject appVoice;
+    public GameObject appVoiceDalle;
+    public GameObject appVoiceGPT;
+
     [SerializeField] private GameObject voiceManagerObject;
+    [SerializeField] private GameObject voiceManagerObjectDalle;
+    [SerializeField] private GameObject voiceManagerObjectGPT;
+
     private void Awake()
     {
         
@@ -72,6 +78,33 @@ public class AudioCaptureTool : MonoBehaviour
         ShowVisuals();              // Start the visual animations
         appVoice.SetActive(true);
         VoiceManager voiceManager = voiceManagerObject.GetComponent<VoiceManager>();
+        if (voiceManager != null)
+        {
+            voiceManager.ReactivateVoice();
+            Debug.Log("VoiceActivator: appVoiceExperience reactivated.");
+        }
+    }
+    public void ActivateDalle()
+    {
+        ResetTool();               // Reset UI elements before activating
+        gameObject.SetActive(true); // Enable the GameObject in the scene
+        ShowVisuals();              // Start the visual animations
+        appVoiceDalle.SetActive(true);
+        VoiceManager voiceManager = voiceManagerObjectDalle.GetComponent<VoiceManager>();
+        if (voiceManager != null)
+        {
+            voiceManager.ReactivateVoice();
+            Debug.Log("VoiceActivator: appVoiceExperience reactivated.");
+        }
+    }
+
+    public void ActivateGPT()
+    {
+        ResetTool();               // Reset UI elements before activating
+        gameObject.SetActive(true); // Enable the GameObject in the scene
+        ShowVisuals();              // Start the visual animations
+        appVoiceGPT.SetActive(true);
+        VoiceManager voiceManager = voiceManagerObjectGPT.GetComponent<VoiceManager>();
         if (voiceManager != null)
         {
             voiceManager.ReactivateVoice();
