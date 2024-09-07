@@ -9,7 +9,7 @@ namespace OpenAI
     public class DallE : MonoBehaviour
     {
         [SerializeField] private TMP_InputField inputField;
-        //[SerializeField] private Button button;
+        [SerializeField] private Button button;
         [SerializeField] private Image image;
         [SerializeField] private GameObject loadingLabel;
 
@@ -17,7 +17,7 @@ namespace OpenAI
 
         private void Start()
         {
-            //button.onClick.AddListener(SendImageRequest);
+            button.onClick.AddListener(SendImageRequest);
         }
 
         public void SetInputFieldText(string transcription)
@@ -31,7 +31,7 @@ namespace OpenAI
         private async void SendImageRequest()
         {
             image.sprite = null;
-            //button.enabled = false;
+            button.enabled = false;
             inputField.enabled = false;
             loadingLabel.SetActive(true);
 
@@ -62,7 +62,7 @@ namespace OpenAI
                 Debug.LogWarning("No image was created from this prompt.");
             }
 
-            //button.enabled = true;
+            button.enabled = true;
             inputField.enabled = true;
             loadingLabel.SetActive(false);
         }
