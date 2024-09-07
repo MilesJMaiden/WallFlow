@@ -565,7 +565,8 @@ MonoBehaviour:
   appVoiceExperience: {fileID: 977646060311111982}
   responseMatcher: {fileID: 4552624648800294856}
   transcriptionText: {fileID: 5254238870712725847}
-  chatGPT: {fileID: 4557846692070996568}
+  chatGPTPrefab: {fileID: 5008317527753135776, guid: 2ea6c80cd94be214e85249ab6b876d2c, type: 3}
+  mainCamera: {fileID: 0}
   wakeWordDetected:
     m_PersistentCalls:
       m_Calls:
