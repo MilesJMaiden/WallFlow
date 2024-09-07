@@ -16,6 +16,9 @@ public class VoiceManager : MonoBehaviour
     [Header("DallE Reference")]
     [SerializeField] private DallE dallE; // DallE 스크립트 참조
 
+    [Header("ChatGPT Reference")]
+    [SerializeField] private ChatGPT chatGPT;
+
     [Header("Voice Events")]
     [SerializeField] private UnityEvent wakeWordDetected;
     [SerializeField] private UnityEvent<string> completeTranscription;
@@ -33,6 +36,9 @@ public class VoiceManager : MonoBehaviour
         {
             onMultiValueEvent.AddListener(WakeWordDetected);
         }
+
+
+
 
         appVoiceExperience.Activate();
         
@@ -74,8 +80,25 @@ public class VoiceManager : MonoBehaviour
         _voiceCommandReady = false;
         completeTranscription?.Invoke(transcription);
 
-        // DallE의 inputField에 텍스트 전달
-        dallE.SetInputFieldText(transcription);
+        
+        if (dallE != null)
+        {
+            dallE.SetInputFieldText(transcription);
+        }
+        else
+        {
+            Debug.LogWarning("DallE reference is null. SetInputFieldText() not called.");
+        }
+
+        // ChatGPT에 텍스트 전달
+        if (chatGPT != null)
+        {
+            chatGPT.SetInputFieldText(transcription);
+        }
+        else
+        {
+            Debug.LogWarning("ChatGPT reference is null. SetInputFieldText() not called.");
+        }
 
         DeactivateVoiceObject();
     }
