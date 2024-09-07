@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4845899432059117194
 Transform:
   m_ObjectHideFlags: 0
@@ -53,4 +53,8 @@ MonoBehaviour:
   doublePressTime: 0.5
   appVoiceExperience: {fileID: 0}
   appVoice: {fileID: 0}
+  appVoiceDalle: {fileID: 0}
+  appVoiceGPT: {fileID: 0}
   voiceManagerObject: {fileID: 0}
+  voiceManagerObjectDalle: {fileID: 0}
+  voiceManagerObjectGPT: {fileID: 0}
