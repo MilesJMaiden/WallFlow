@@ -47,6 +47,6 @@ MonoBehaviour:
   _maxLineWidth: 0.005
   _minLineWidth: 0.0005
   _material: {fileID: 2100000, guid: a0f85b09888a44a54ac7194c1e11fb46, type: 2}
-  _currentColor: {r: 0, g: 0, b: 0, a: 0}
+  _currentColor: {r: 0, g: 0, b: 0, a: 1}
   longPressDuration: 1
   _stylusHandler: {fileID: 0}
