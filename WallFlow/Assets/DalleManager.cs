@@ -1,29 +1,56 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 using TMPro;
 using Oculus.Voice;
 using System.Reflection;
 using Meta.WitAi.CallbackHandlers;
 using OpenAI;
+using UnityEngine.Networking;
+using System.Threading.Tasks;
 
-public class VoiceManager : MonoBehaviour
+
+public class DalleManager : MonoBehaviour
 {
+    //[SerializeField] private GameObject voiceManagerObject;
+
     [Header("Wit Configuration")]
     [SerializeField] private AppVoiceExperience appVoiceExperience;
     [SerializeField] private WitResponseMatcher responseMatcher;
     [SerializeField] private TextMeshProUGUI transcriptionText;
 
     [Header("DallE Reference")]
-    [SerializeField] private DallE dallE; // DallE 스크립트 참조
-
-    [Header("ChatGPT Reference")]
-    [SerializeField] private ChatGPT chatGPT;
+    [SerializeField] private DallE dallE; // DallE script
 
     [Header("Voice Events")]
     [SerializeField] private UnityEvent wakeWordDetected;
     [SerializeField] private UnityEvent<string> completeTranscription;
 
     private bool _voiceCommandReady;
+
+    private bool isFirstDeactivationDone = false;
+
+    private void Start()
+    {
+
+        if (!isFirstDeactivationDone)
+        {
+            isFirstDeactivationDone = true;
+        }
+    }
+
+    private void Update()
+    {
+        ReactivateVoice();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            
+             ReactivateVoice();
+                 
+        }
+    }
+
 
     private void Awake()
     {
@@ -37,14 +64,9 @@ public class VoiceManager : MonoBehaviour
             onMultiValueEvent.AddListener(WakeWordDetected);
         }
 
-
-
-
         appVoiceExperience.Activate();
-        
-    }
 
-    
+    }
 
     private void OnDestroy()
     {
@@ -59,7 +81,7 @@ public class VoiceManager : MonoBehaviour
             onMultiValueEvent.RemoveListener(WakeWordDetected);
         }
     }
-    
+
     public void ReactivateVoice() => appVoiceExperience.Activate();
 
     private void WakeWordDetected(string[] arg0)
@@ -80,7 +102,7 @@ public class VoiceManager : MonoBehaviour
         _voiceCommandReady = false;
         completeTranscription?.Invoke(transcription);
 
-        
+
         if (dallE != null)
         {
             dallE.SetInputFieldText(transcription);
@@ -90,24 +112,12 @@ public class VoiceManager : MonoBehaviour
             Debug.LogWarning("DallE reference is null. SetInputFieldText() not called.");
         }
 
-        // ChatGPT에 텍스트 전달
-        if (chatGPT != null)
-        {
-            chatGPT.SetInputFieldText(transcription);
-        }
-        else
-        {
-            Debug.LogWarning("ChatGPT reference is null. SetInputFieldText() not called.");
-        }
-
-        DeactivateVoiceObject();
+        //DeactivateVoiceObject();
     }
-    
-    
+
     private void DeactivateVoiceObject()
     {
-        
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
         Debug.Log("VoiceManager: GameObject has been deactivated.");
     }
 
