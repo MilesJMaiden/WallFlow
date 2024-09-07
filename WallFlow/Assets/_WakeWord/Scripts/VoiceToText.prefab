@@ -111,7 +111,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1150481244159041081}
   - component: {fileID: 8273160662638827509}
-  - component: {fileID: 1708083289874561258}
+  - component: {fileID: 3631679691809344069}
   - component: {fileID: 4088446179676176894}
   - component: {fileID: 4306018888799860071}
   m_Layer: 0
@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appVoiceExperience: {fileID: 4088446179676176894}
-  responseMatcher: {fileID: 1708083289874561258}
+  responseMatcher: {fileID: 0}
   transcriptionText: {fileID: 0}
   dallE: {fileID: 0}
   chatGPT: {fileID: 0}
@@ -183,7 +183,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1708083289874561258
+--- !u!114 &3631679691809344069
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 591c3d6f017c11b4faa41506d75635b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Voice: {fileID: 4088446179676176894}
+  Voice: {fileID: 0}
   ValidateEarly: 0
   intent: wake_word
   confidenceThreshold: 0.6

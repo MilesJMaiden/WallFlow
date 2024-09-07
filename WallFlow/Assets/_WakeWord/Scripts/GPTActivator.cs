@@ -28,7 +28,7 @@ public class GPTActivator : MonoBehaviour
 
 
 
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.K))
         {
             Debug.Log("Space key pressed in VoiceActivator!");
 

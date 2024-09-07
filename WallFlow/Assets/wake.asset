@@ -33,16 +33,88 @@ MonoBehaviour:
     isPrivate: 1
     createdAt: 2024-09-05T16:51:40-0700
     trainingStatus: 1
-    lastTrainDuration: 76
-    lastTrainedAt: 2024-09-05T16:56:31-0700
-    nextTrainAt: 2024-09-05T16:55:15-0700
+    lastTrainDuration: 49
+    lastTrainedAt: 2024-09-06T11:29:31-0700
+    nextTrainAt: 2024-09-06T11:28:42-0700
     intents:
+    - id: 433936245743609
+      name: Octopus
+      entities:
+      - name: Octopus:Octopus
+        id: 2299434073727395
+    - id: 850838250359556
+      name: TeddyBear
+      entities:
+      - name: TeddyBear:TeddyBear
+        id: 1733945714099415
+    - id: 508104605143311
+      name: flower
+      entities:
+      - name: flower:flower
+        id: 818099673682080
+    - id: 888958396626597
+      name: number
+      entities:
+      - name: number:number
+        id: 1684299585747096
     - id: 1053627432885448
       name: wake_word
       entities:
       - name: wake_word:wake_word
         id: 494410659886257
     entities:
+    - name: Octopus
+      id: 508669241921267
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Octopus
+        id: 2299434073727395
+      keywords:
+      - keyword: Octopus
+        synonyms:
+        - octopus
+    - name: TeddyBear
+      id: 870848204970202
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: TeddyBear
+        id: 1733945714099415
+      keywords:
+      - keyword: TeddyBear
+        synonyms:
+        - teddy bear
+        - teddybear
+    - name: flower
+      id: 3592296147676275
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: flower
+        id: 818099673682080
+      keywords:
+      - keyword: flower
+        synonyms:
+        - flower
+    - name: number
+      id: 1058959485094437
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: number
+        id: 1684299585747096
+      keywords:
+      - keyword: five
+        synonyms:
+        - five
+      - keyword: nine
+        synonyms:
+        - nine
     - name: wake_word
       id: 1629742434268839
       lookups:
@@ -566,7 +638,8 @@ MonoBehaviour:
   _configData:
   - {fileID: -49526426044259881}
   _configurationId: 46d02ab3-8bba-42d5-b09a-3f5eab43c319
-  timeoutMS: 10000
+  _requestType: 0
+  _requestTimeoutMs: 10000
   endpointConfiguration:
     _uriScheme: 
     _authority: 

@@ -5,88 +5,39 @@ using UnityEngine.Events;
 
 public class RadialMenu : MonoBehaviour
 {
-    #region Fields
-
-    [Header("Radial Menu Settings")]
-    [Tooltip("Button used to spawn the radial menu.")]
     public OVRInput.Button spawnRadialMenuButton;
 
-    [Tooltip("Number of segments in the radial menu.")]
     [Range(2, 6)]
     public int segmentTotal;
-
-    [Tooltip("Prefab for individual radial segments.")]
     public GameObject radialSegment;
-
-    [Tooltip("Parent canvas for radial segments.")]
     public Transform radialSegmentCanvas;
-
-    [Tooltip("Angle between segments in the radial menu.")]
     public float angleBetweenSegments = 5f;
-
-    [Tooltip("Transform of the hand to position the radial menu.")]
     public Transform handTransform;
 
-    [Tooltip("Event triggered when a segment is selected.")]
     public UnityEvent<int> onSegmentSelected;
 
-    [Tooltip("Icons for each segment of the radial menu.")]
-    public Sprite[] segmentIcons;
+    public Sprite[] segmentIcons; // Array to hold the sprites for each segment
 
     private List<GameObject> spawnedSegments = new List<GameObject>();
     private int currentSelectedRadialSegment = -1;
 
-    [Header("Tool References")]
-    [Tooltip("Prefab reference for the Audio Capture Tool.")]
     [SerializeField]
-    private GameObject audioCaptureToolPrefab;
+    private GameObject audioCaptureToolPrefab; // Prefab reference for AudioCaptureTool
 
-    [Tooltip("Reference to the Audio Capture Tool in the scene.")]
     [SerializeField]
-    private AudioCaptureTool audioCaptureTool;
+    private AudioCaptureTool audioCaptureTool; // Reference to AudioCaptureTool in the scene
 
-    [Tooltip("Reference to the Prefab Spawner in the scene.")]
-    public SimplePrefabSpawner prefabSpawnerTool;
+    // Keyboard keys for testing
+    public KeyCode testActivateVoiceToTextKey = KeyCode.T; // Key to activate the AudioCaptureTool
+    public KeyCode testDeactivateVoiceToTextKey = KeyCode.Y; // Key to deactivate the AudioCaptureTool
 
-    [Tooltip("Reference to the Prefab Spawner GameObject in the scene.")]
-    public GameObject prefabSpawnerToolObject;
+    public KeyCode testActivateDalleKey = KeyCode.D; // Key to activate the AudioCaptureTool
+    public KeyCode testDeactivateDalleKey = KeyCode.F; // Key to deactivate the AudioCaptureTool
 
-    [Header("Testing Keyboard Shortcuts")]
-    [Tooltip("Key to simulate selection of the first radial menu segment (Audio Capture Tool).")]
-    public KeyCode debugKeyForTool1 = KeyCode.Alpha1;
+    public KeyCode testActivateGPTKey = KeyCode.G; // Key to activate the AudioCaptureTool
+    public KeyCode testDeactivateGPTKey = KeyCode.H; // Key to deactivate the AudioCaptureTool
 
-    [Tooltip("Key to simulate selection of the second radial menu segment (Prefab Spawner Tool).")]
-    public KeyCode debugKeyForTool2 = KeyCode.Alpha2;
-
-    [Tooltip("Key to simulate selection of the third radial menu segment (Tool 3).")]
-    public KeyCode debugKeyForTool3 = KeyCode.Alpha3;
-
-    [Tooltip("Key to simulate selection of the fourth radial menu segment (Tool 4).")]
-    public KeyCode debugKeyForTool4 = KeyCode.Alpha4;
-
-    #endregion
-
-    #region Unity Methods
-
-    /// <summary>
-    /// Unity Update method called once per frame.
-    /// Handles input for showing the radial menu and selecting segments.
-    /// Also handles test keys for activating/deactivating tools.
-    /// </summary>
     void Update()
-    {
-        HandleRadialMenuInput();
-        HandleKeyboardTestInput();
-    }
-
-    #endregion
-
-    #region Radial Menu Methods
-
-    /// <summary>
-    /// Handles the input for the radial menu button press.
-    /// </summary>
-    private void HandleRadialMenuInput()
     {
         if (OVRInput.GetDown(spawnRadialMenuButton))
         {
@@ -102,11 +53,95 @@ public class RadialMenu : MonoBehaviour
         {
             HideAndTriggerSelected();
         }
+
+        // Check for test activation and deactivation keys
+        if (Input.GetKeyDown(testActivateVoiceToTextKey))
+        {
+            ActivateAudioCaptureTool();
+        }
+
+        if (Input.GetKeyDown(testDeactivateVoiceToTextKey))
+        {
+            DeactivateAudioCaptureTool();
+        }
+        // Check for test activation and deactivation keys
+        if (Input.GetKeyDown(testActivateDalleKey))
+        {
+            ActivateDalleTool();
+        }
+
+        if (Input.GetKeyDown(testDeactivateDalleKey))
+        {
+            DeactivateDalleTool();
+        }
+        // Check for test activation and deactivation keys
+        if (Input.GetKeyDown(testActivateGPTKey))
+        {
+            ActivateGPTTool();
+        }
+
+        if (Input.GetKeyDown(testDeactivateGPTKey))
+        {
+            DeactivateGPTTool();
+        }
     }
 
-    /// <summary>
-    /// Spawns the radial menu segments around the hand position.
-    /// </summary>
+    public void HideAndTriggerSelected()
+    {
+        onSegmentSelected.Invoke(currentSelectedRadialSegment);
+        radialSegmentCanvas.gameObject.SetActive(false);
+
+        // Execute logic based on the selected segment
+        switch (currentSelectedRadialSegment)
+        {
+            case 0:
+                ExecuteAudioCaptureTool();
+                break;
+            case 1:
+                ExecuteTool2();
+                break;
+            case 2:
+                ExecuteGPTTool();
+                break;
+            case 3:
+                ExecuteDalleTool();
+                break;
+            // Add more cases if you have more segments
+            default:
+                Debug.LogWarning("Unknown segment selected");
+                break;
+        }
+    }
+
+    public void GetSelectedRadialSegment()
+    {
+        Vector3 centerToHand = handTransform.position - radialSegmentCanvas.position;
+        Vector3 centerToHandProjected = Vector3.ProjectOnPlane(centerToHand, radialSegmentCanvas.forward);
+
+        float angle = Vector3.SignedAngle(radialSegmentCanvas.up, centerToHandProjected, -radialSegmentCanvas.forward);
+
+        if (angle < 0)
+        {
+            angle += 360;
+        }
+
+        currentSelectedRadialSegment = (int)(angle * segmentTotal / 360);
+
+        for (int i = 0; i < spawnedSegments.Count; i++)
+        {
+            if (i == currentSelectedRadialSegment)
+            {
+                spawnedSegments[i].GetComponent<Image>().color = Color.yellow;
+                spawnedSegments[i].transform.localScale = 1.1f * Vector3.one;
+            }
+            else
+            {
+                spawnedSegments[i].GetComponent<Image>().color = Color.white;
+                spawnedSegments[i].transform.localScale = Vector3.one;
+            }
+        }
+    }
+
     public void SpawnRadialMenu()
     {
         radialSegmentCanvas.gameObject.SetActive(true);
@@ -163,80 +198,12 @@ public class RadialMenu : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Identifies which radial segment is selected based on hand position.
-    /// </summary>
-    public void GetSelectedRadialSegment()
-    {
-        Vector3 centerToHand = handTransform.position - radialSegmentCanvas.position;
-        Vector3 centerToHandProjected = Vector3.ProjectOnPlane(centerToHand, radialSegmentCanvas.forward);
-
-        float angle = Vector3.SignedAngle(radialSegmentCanvas.up, centerToHandProjected, -radialSegmentCanvas.forward);
-
-        if (angle < 0)
-        {
-            angle += 360;
-        }
-
-        currentSelectedRadialSegment = (int)(angle * segmentTotal / 360);
-
-        for (int i = 0; i < spawnedSegments.Count; i++)
-        {
-            if (i == currentSelectedRadialSegment)
-            {
-                spawnedSegments[i].GetComponent<Image>().color = Color.yellow;
-                spawnedSegments[i].transform.localScale = 1.1f * Vector3.one;
-            }
-            else
-            {
-                spawnedSegments[i].GetComponent<Image>().color = Color.white;
-                spawnedSegments[i].transform.localScale = Vector3.one;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Hides the radial menu and triggers the selected segment's associated action.
-    /// </summary>
-    public void HideAndTriggerSelected()
-    {
-        onSegmentSelected.Invoke(currentSelectedRadialSegment);
-        radialSegmentCanvas.gameObject.SetActive(false);
-
-        // Execute logic based on the selected segment
-        switch (currentSelectedRadialSegment)
-        {
-            case 0:
-                ExecuteAudioCaptureTool();
-                break;
-            case 1:
-                ExecutePrefabSpawnerTool();
-                break;
-            case 2:
-                ExecuteDalleTool();
-                break;
-            case 3:
-                ExecuteGPTTool();
-                break;
-            // Add more cases if you have more segments
-            default:
-                Debug.LogWarning("Unknown segment selected");
-                break;
-        }
-    }
-
-    #endregion
-
-    #region Tool Execution Methods
-
-    /// <summary>
-    /// Executes the Audio Capture Tool.
-    /// </summary>
+    // Method to activate the AudioCaptureTool
     private void ExecuteAudioCaptureTool()
     {
         if (audioCaptureTool != null)
         {
-            audioCaptureTool.ActivateTool(); // Activate the AudioCaptureTool
+            audioCaptureTool.ActivateVoiceToTextTool(); // Activate the AudioCaptureTool
             Debug.Log("Audio Capture Tool activated");
         }
         else
@@ -271,60 +238,94 @@ public class RadialMenu : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Executes the Prefab Spawner Tool by activating it in the scene.
-    /// </summary>
-    private void ExecutePrefabSpawnerTool()
+    // Method for keyboard activation of the AudioCaptureTool
+    private void ActivateAudioCaptureTool()
     {
-        if (prefabSpawnerTool != null)
+        if (audioCaptureTool != null)
         {
-            prefabSpawnerTool.ActivateTool(); // Activate the Prefab Spawner Tool
-            Debug.Log("Prefab Spawner Tool activated from Radial Menu.");
+            audioCaptureTool.gameObject.SetActive(true); // Enable the GameObject
+            audioCaptureTool.ActivateVoiceToTextTool(); // Start the UI effects
+            Debug.Log("Audio Capture Tool activated via keyboard.");
         }
         else
         {
-            Debug.LogError("PrefabSpawnerTool reference is not set in the Inspector.");
+            Debug.LogError("AudioCaptureTool reference is not set in the Inspector.");
         }
     }
 
-   
-
-    #endregion
-
-    #region Testing Input Methods
-
-    /// <summary>
-    /// Handles keyboard input for testing activation of tools as if selected from the radial menu.
-    /// </summary>
-    private void HandleKeyboardTestInput()
+    // Method for keyboard deactivation of the AudioCaptureTool
+    private void DeactivateAudioCaptureTool()
     {
-        if (Input.GetKeyDown(debugKeyForTool1))
+        if (audioCaptureTool != null && audioCaptureTool.gameObject.activeSelf)
         {
-            // Simulate selection of the first tool (e.g., Audio Capture Tool)
-            currentSelectedRadialSegment = 0;
-            HideAndTriggerSelected();
-            Debug.Log("Simulated selection of the first radial menu segment (Audio Capture Tool).");
+            audioCaptureTool.DeactivateTool(); // Reset and hide the tool
+            Debug.Log("Audio Capture Tool deactivated via keyboard.");
         }
-        else if (Input.GetKeyDown(debugKeyForTool2))
+    }
+    private void ActivateDalleTool()
+    {
+        if (audioCaptureTool != null)
         {
-            // Simulate selection of the second tool (e.g., Prefab Spawner Tool)
-            currentSelectedRadialSegment = 1;
-            HideAndTriggerSelected();
-            Debug.Log("Simulated selection of the second radial menu segment (Prefab Spawner Tool).");
+            audioCaptureTool.gameObject.SetActive(true); // Enable the GameObject
+            audioCaptureTool.ActivateDalle(); // Start the UI effects
+            Debug.Log("Audio Capture Tool activated via keyboard.");
         }
-        else if (Input.GetKeyDown(debugKeyForTool3))
+        else
         {
-            currentSelectedRadialSegment = 2;
-            HideAndTriggerSelected();
-            Debug.Log("Simulated selection of the third radial menu segment (Tool 3).");
-        }
-        else if (Input.GetKeyDown(debugKeyForTool4))
-        {
-            currentSelectedRadialSegment = 3;
-            HideAndTriggerSelected();
-            Debug.Log("Simulated selection of the fourth radial menu segment (Tool 4).");
+            Debug.LogError("AudioCaptureTool reference is not set in the Inspector.");
         }
     }
 
-    #endregion
+    // Method for keyboard deactivation of the AudioCaptureTool
+    private void DeactivateDalleTool()
+    {
+        if (audioCaptureTool != null && audioCaptureTool.gameObject.activeSelf)
+        {
+            audioCaptureTool.DeactivateTool(); // Reset and hide the tool
+            Debug.Log("Audio Capture Tool deactivated via keyboard.");
+        }
+    }
+
+    private void ActivateGPTTool()
+    {
+        if (audioCaptureTool != null)
+        {
+            audioCaptureTool.gameObject.SetActive(true); // Enable the GameObject
+            audioCaptureTool.ActivateGPT(); // Start the UI effects
+            Debug.Log("Audio Capture Tool activated via keyboard.");
+        }
+        else
+        {
+            Debug.LogError("AudioCaptureTool reference is not set in the Inspector.");
+        }
+    }
+
+    // Method for keyboard deactivation of the AudioCaptureTool
+    private void DeactivateGPTTool()
+    {
+        if (audioCaptureTool != null && audioCaptureTool.gameObject.activeSelf)
+        {
+            audioCaptureTool.DeactivateTool(); // Reset and hide the tool
+            Debug.Log("Audio Capture Tool deactivated via keyboard.");
+        }
+    }
+    private void ExecuteTool2()
+    {
+        // Logic for Tool 2
+        Debug.Log("Tool 2 activated");
+    }
+
+    //private void ExecuteTool3()
+    //{
+    //    // Logic for Tool 3
+    //    Debug.Log("Tool 3 activated");
+    //}
+
+    //private void ExecuteTool4()
+    //{
+    //    // Logic for Tool 4
+    //    Debug.Log("Tool 4 activated");
+    //}
+
+    // Add more methods if you have more segments
 }

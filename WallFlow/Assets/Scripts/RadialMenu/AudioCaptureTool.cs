@@ -71,7 +71,7 @@ public class AudioCaptureTool : MonoBehaviour
         isBobbing = false;
     }
 
-    public void ActivateTool()
+    public void ActivateVoiceToTextTool()
     {
         ResetTool();               // Reset UI elements before activating
         gameObject.SetActive(true); // Enable the GameObject in the scene
