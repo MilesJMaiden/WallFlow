@@ -17,7 +17,6 @@ public class DalleManager : MonoBehaviour
 
     [Header("UI Prefab Settings")]
     [SerializeField] private GameObject resultPrefab; // The UI prefab to instantiate
-    [SerializeField] private Transform uiParent; // Parent to attach the instantiated prefab, if needed
     [SerializeField] private Camera mainCamera; // Reference to the player's main camera (headset)
 
     [Header("Voice Events")]
@@ -110,7 +109,7 @@ public class DalleManager : MonoBehaviour
         if (uiHandler != null)
         {
             uiHandler.inputField.text = transcription;
-            uiHandler.transcriptionText.text = transcription; // This line accesses transcriptionText correctly
+            uiHandler.transcriptionText.text = transcription; // Access transcriptionText correctly
             Debug.Log("DalleManager: Text received from VoiceManager: " + transcription);
 
             // Directly send the image request based on the input field text
@@ -121,7 +120,6 @@ public class DalleManager : MonoBehaviour
             Debug.LogError("ResultUIHandler not found on the prefab.");
         }
     }
-
 
     private async void SendImageRequest(ResultUIHandler uiHandler)
     {
