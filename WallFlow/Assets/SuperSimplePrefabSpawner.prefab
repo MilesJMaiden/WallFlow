@@ -45,11 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c80f898a0f7992445b2c97ac1ea94597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabs: []
-  mainCamera: {fileID: 0}
+  prefabs:
+  - {fileID: 250583335425986394, guid: 6d16cfd91884bc6409dc13e0713c17ee, type: 3}
+  - {fileID: 363991559676295635, guid: 3b61f048d7ed500428e3e8068e2c9c7a, type: 3}
+  - {fileID: 7951796820300416878, guid: b13df5914f01c834fb9f8f498adddd4c, type: 3}
+  - {fileID: 5137463637888948528, guid: cbb1b33b9d1b4004396eb77fc2f23493, type: 3}
+  - {fileID: 7628909544489950333, guid: 721a76547a0d9234d9690dfd6e45bc86, type: 3}
+  - {fileID: 3202306037386345504, guid: 57049d492c3be3442abf19c63af071df, type: 3}
+  - {fileID: 8082257530595463221, guid: f41313775e611d748b6bc87760d33977, type: 3}
+  - {fileID: 6379294083884866501, guid: bb136b25dc0fd044aad536e6af760b7e, type: 3}
+  spawnPoint: {fileID: 0}
+  spawnDistance: 1.5
   audioSource: {fileID: 231532499908057008}
   spawnSound: {fileID: 8300000, guid: 6ca794cd4514a06409618e8b21c933d2, type: 3}
-  spawnDistance: 1.5
 --- !u!82 &231532499908057008
 AudioSource:
   m_ObjectHideFlags: 0
