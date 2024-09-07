@@ -5,17 +5,18 @@ using TMPro;
 using Oculus.Voice;
 using System.Reflection;
 using Meta.WitAi.CallbackHandlers;
+using OpenAI;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
-using OpenAI;
 
 public class DalleManager : MonoBehaviour
 {
     [Header("Wit Configuration")]
     [SerializeField] private AppVoiceExperience appVoiceExperience;
     [SerializeField] private WitResponseMatcher responseMatcher;
+    [SerializeField] private TextMeshProUGUI transcriptionText;
 
-    [Header("UI Prefab Settings")]
+    [Header("Prefab Settings")]
     [SerializeField] private GameObject resultPrefab; // The UI prefab to instantiate
     [SerializeField] private Camera mainCamera; // Reference to the player's main camera (headset)
 
@@ -25,8 +26,6 @@ public class DalleManager : MonoBehaviour
 
     private bool _voiceCommandReady;
     private bool isFirstDeactivationDone = false;
-
-    private OpenAIApi openai = new OpenAIApi();
 
     private void Start()
     {
@@ -85,8 +84,7 @@ public class DalleManager : MonoBehaviour
     private void OnPartialTranscription(string transcription)
     {
         if (!_voiceCommandReady) return;
-
-        // Since we're passing this to the handler now, the manager does not need to manage this directly.
+        transcriptionText.text = transcription;
     }
 
     private void OnFullTranscription(string transcription)
@@ -95,86 +93,26 @@ public class DalleManager : MonoBehaviour
         _voiceCommandReady = false;
         completeTranscription?.Invoke(transcription);
 
-        SetInputFieldText(transcription);
+        // Spawn the prefab and pass transcription to DallE script
+        SpawnPrefabAndSetTranscription(transcription);
     }
 
-    public void SetInputFieldText(string transcription)
+    private void SpawnPrefabAndSetTranscription(string transcription)
     {
-        // Instantiate the UI prefab in front of the player's head
+        // Instantiate the prefab in front of the player's head
         GameObject resultUI = Instantiate(resultPrefab);
         PositionPrefabInFrontOfPlayer(resultUI);
 
-        // Access the UI components from the prefab through ResultUIHandler
-        ResultUIHandler uiHandler = resultUI.GetComponent<ResultUIHandler>();
-        if (uiHandler != null)
+        // Access the DallE handler from the prefab
+        DallEHandler dallEHandler = resultUI.GetComponent<DallEHandler>();
+        if (dallEHandler != null)
         {
-            uiHandler.inputField.text = transcription;
-            uiHandler.transcriptionText.text = transcription; // Access transcriptionText correctly
-            Debug.Log("DalleManager: Text received from VoiceManager: " + transcription);
-
-            // Directly send the image request based on the input field text
-            SendImageRequest(uiHandler);
+            dallEHandler.SetInputFieldText(transcription);
         }
         else
         {
-            Debug.LogError("ResultUIHandler not found on the prefab.");
+            Debug.LogWarning("DallEHandler component not found on the instantiated prefab.");
         }
-    }
-
-    private async void SendImageRequest(ResultUIHandler uiHandler)
-    {
-        uiHandler.inputField.enabled = false;
-        uiHandler.loadingLabel.SetActive(true);
-
-        var response = await openai.CreateImage(new CreateImageRequest
-        {
-            Prompt = uiHandler.inputField.text,
-            Size = ImageSize.Size256
-        });
-
-        if (response.Data != null && response.Data.Count > 0)
-        {
-            using (var request = new UnityWebRequest(response.Data[0].Url))
-            {
-                request.downloadHandler = new DownloadHandlerBuffer();
-                request.SetRequestHeader("Access-Control-Allow-Origin", "*");
-                request.SendWebRequest();
-
-                while (!request.isDone) await Task.Yield();
-
-                if (request.result == UnityWebRequest.Result.Success)
-                {
-                    Texture2D texture = new Texture2D(2, 2);
-                    texture.LoadImage(request.downloadHandler.data);
-                    var sprite = Sprite.Create(texture, new Rect(0, 0, 256, 256), Vector2.zero, 1f);
-
-                    // Assign the generated image to the AIResult child
-                    if (uiHandler.aiResultImage != null)
-                    {
-                        uiHandler.aiResultImage.sprite = sprite;
-                    }
-                    else
-                    {
-                        Debug.LogError("AIResult Image not assigned in ResultUIHandler.");
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning("Failed to download image: " + request.error);
-                }
-            }
-        }
-        else
-        {
-            Debug.LogWarning("No image was created from this prompt.");
-        }
-
-        uiHandler.inputField.enabled = true;
-        uiHandler.loadingLabel.SetActive(false);
-
-        // Disable this manager object after the operation
-        gameObject.SetActive(false);
-        Debug.Log("VoiceManager: GameObject has been deactivated after spawning result UI.");
     }
 
     private void PositionPrefabInFrontOfPlayer(GameObject prefab)

@@ -122,37 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &117496320
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 117496321}
-  m_Layer: 0
-  m_Name: 1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &117496321
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 117496320}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 1, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &131668230
 GameObject:
   m_ObjectHideFlags: 0
@@ -1181,6 +1150,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21efec6c338959b45b0d70e56e5f4c98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!20 &5345316104009205285 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 4373883133615013207, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+  m_PrefabInstance: {fileID: 5345316104009205283}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5556530260778190718 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6256547851119626771, guid: 50c3d46954be2c145bcd4134ca10cc16, type: 3}
@@ -1203,9 +1177,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df102b3e075309949914aff48552addd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aiResultImage: {fileID: 8922427594932514492}
   inputField: {fileID: 4400619772155917752}
-  generateButton: {fileID: 0}
+  image: {fileID: 0}
   loadingLabel: {fileID: 6465097925683673713}
 --- !u!1001 &8695037038337192128
 PrefabInstance:
@@ -1274,7 +1247,11 @@ PrefabInstance:
     - target: {fileID: 6636606924003342361, guid: 799a0fc308cef134ca28007e5d585ce3, type: 3}
       propertyPath: uiParent
       value: 
-      objectReference: {fileID: 117496321}
+      objectReference: {fileID: 0}
+    - target: {fileID: 6636606924003342361, guid: 799a0fc308cef134ca28007e5d585ce3, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 5345316104009205285}
     - target: {fileID: 6636606924003342361, guid: 799a0fc308cef134ca28007e5d585ce3, type: 3}
       propertyPath: resultPrefab
       value: 
@@ -1317,4 +1294,3 @@ SceneRoots:
   - {fileID: 8695037038337192128}
   - {fileID: 785266378}
   - {fileID: 705283336212668973}
-  - {fileID: 117496321}
