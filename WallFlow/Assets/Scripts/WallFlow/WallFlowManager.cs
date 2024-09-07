@@ -56,8 +56,35 @@ public class WallFlowManager : MonoBehaviour
                 boundsClipper = surface.GetComponent<BoundsClipper>();
             }
 
-            // Find the BoxCollider attached to the wallFlowPrefab
-            wallFlowCollider = wallFlowInstance.GetComponent<BoxCollider>();
+            // A recursive method to find the BoxCollider in any child
+            BoxCollider FindBoxColliderInChildren(Transform parent)
+            {
+                foreach (Transform child in parent)
+                {
+                    BoxCollider collider = child.GetComponent<BoxCollider>();
+                    if (collider != null)
+                    {
+                        return collider;
+                    }
+                    // Recursively search in the child's children
+                    BoxCollider foundInChild = FindBoxColliderInChildren(child);
+                    if (foundInChild != null)
+                    {
+                        return foundInChild;
+                    }
+                }
+                return null;
+            }
+
+            // Call the method to find the BoxCollider in any child of wallFlowInstance
+            wallFlowCollider = FindBoxColliderInChildren(wallFlowInstance.transform);
+
+            if (wallFlowCollider == null)
+            {
+                Debug.LogError("BoxCollider not found in any child.");
+            }
+
+
 
             if (canvasRect == null || boundsClipper == null || wallFlowCollider == null)
             {
