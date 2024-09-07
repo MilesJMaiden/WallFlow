@@ -2,94 +2,127 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
-using TMPro;
+using System;
 
 namespace OpenAI
 {
     public class DallEHandler : MonoBehaviour
     {
-        [SerializeField] private TMP_InputField inputField;
+        #region Inspector Variables
+
+        [Tooltip("Image component where the generated image will be displayed.")]
         [SerializeField] private Image image;
+
+        [Tooltip("UI label to show loading indicator while waiting for image generation.")]
         [SerializeField] private GameObject loadingLabel;
+
+        #endregion
+
+        #region Private Variables
 
         private OpenAIApi openai = new OpenAIApi();
 
+        #endregion
+
+        #region Unity Callbacks
+
+        /// <summary>
+        /// Initializes the DallEHandler by ensuring the loading label is hidden.
+        /// </summary>
         private void Start()
         {
-            // Ensure loading label is hidden initially
             loadingLabel.SetActive(false);
         }
 
-        public void SetInputFieldText(string transcription)
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Starts the process of generating an image from the transcription text.
+        /// </summary>
+        /// <param name="transcription">The transcription text received from voice input.</param>
+        /// <param name="onComplete">Callback to invoke when the image is loaded.</param>
+        public void GenerateImageFromText(string transcription, Action onComplete)
         {
-            inputField.text = transcription;
-            Debug.Log("DallEHandler: Text received from VoiceManager: " + transcription);
+            Debug.Log("DallEHandler: Text received: " + transcription);
 
-            // Show loading indicator
             ShowLoading();
-
-            // Initiate the image request
-            SendImageRequest();
+            SendImageRequest(transcription, onComplete);
         }
 
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Shows the loading label and disables the input field.
+        /// </summary>
         private void ShowLoading()
         {
             loadingLabel.SetActive(true);
-            inputField.enabled = false;  // Disable the input field during loading
         }
 
+        /// <summary>
+        /// Hides the loading label.
+        /// </summary>
         private void HideLoading()
         {
             loadingLabel.SetActive(false);
-            inputField.enabled = true;   // Re-enable the input field after loading
         }
 
-        private async void SendImageRequest()
+        /// <summary>
+        /// Sends an image generation request to the OpenAI API.
+        /// </summary>
+        private async void SendImageRequest(string transcription, Action onComplete)
         {
-            image.sprite = null; // Clear any previous image
+            image.sprite = null;
             Debug.Log("Sending image request to OpenAI...");
 
-            var response = await openai.CreateImage(new CreateImageRequest
+            try
             {
-                Prompt = inputField.text,
-                Size = ImageSize.Size256
-            });
-
-            if (response.Data != null && response.Data.Count > 0)
-            {
-                Debug.Log("Image URL received, starting download...");
-                using (var request = UnityWebRequestTexture.GetTexture(response.Data[0].Url))
+                var response = await openai.CreateImage(new CreateImageRequest
                 {
-                    request.SetRequestHeader("Access-Control-Allow-Origin", "*");
-                    request.SendWebRequest();
+                    Prompt = transcription,
+                    Size = ImageSize.Size256
+                });
 
-                    // Correctly await the UnityWebRequest to complete
-                    while (!request.isDone)
+                if (response.Data != null && response.Data.Count > 0)
+                {
+                    using (var request = UnityWebRequestTexture.GetTexture(response.Data[0].Url))
                     {
-                        await Task.Yield();
-                    }
+                        request.SendWebRequest();
+                        while (!request.isDone) await Task.Yield();
 
-                    if (request.result == UnityWebRequest.Result.Success)
-                    {
-                        Debug.Log("Image download successful.");
-                        Texture2D texture = DownloadHandlerTexture.GetContent(request);
-                        var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero, 1f);
-                        image.sprite = sprite;
-                        Debug.Log("Image successfully assigned to the prefab.");
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"Failed to download image: {request.error}");
+                        if (request.result == UnityWebRequest.Result.Success)
+                        {
+                            Texture2D texture = DownloadHandlerTexture.GetContent(request);
+                            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                            image.sprite = sprite;
+                            Debug.Log("Image successfully assigned.");
+                        }
+                        else
+                        {
+                            Debug.LogError("Failed to download image: " + request.error);
+                        }
                     }
                 }
+                else
+                {
+                    Debug.LogWarning("No image was created from this prompt.");
+                }
             }
-            else
+            catch (System.Exception ex)
             {
-                Debug.LogWarning("No image was created from this prompt.");
+                Debug.LogError("Error generating image: " + ex.Message);
             }
-
-            // Hide the loading label regardless of success or failure
-            HideLoading();
+            finally
+            {
+                HideLoading();
+                onComplete?.Invoke(); // Invoke the callback after image loading is complete
+            }
         }
+
+        #endregion
     }
 }
