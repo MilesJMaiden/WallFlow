@@ -213,10 +213,10 @@ public class RadialMenu : MonoBehaviour
                 ExecutePrefabSpawnerTool();
                 break;
             case 2:
-                ExecuteTool3();
+                ExecuteDalleTool();
                 break;
             case 3:
-                ExecuteTool4();
+                ExecuteGPTTool();
                 break;
             // Add more cases if you have more segments
             default:
@@ -245,6 +245,32 @@ public class RadialMenu : MonoBehaviour
         }
     }
 
+    private void ExecuteDalleTool()
+    {
+        if (audioCaptureTool != null)
+        {
+            audioCaptureTool.ActivateDalle(); // Activate the AudioCaptureTool
+            Debug.Log("Audio Capture Tool activated");
+        }
+        else
+        {
+            Debug.LogError("AudioCaptureTool reference is not set in the Inspector.");
+        }
+    }
+
+    private void ExecuteGPTTool()
+    {
+        if (audioCaptureTool != null)
+        {
+            audioCaptureTool.ActivateGPT(); // Activate the AudioCaptureTool
+            Debug.Log("Audio Capture Tool activated");
+        }
+        else
+        {
+            Debug.LogError("AudioCaptureTool reference is not set in the Inspector.");
+        }
+    }
+
     /// <summary>
     /// Executes the Prefab Spawner Tool by activating it in the scene.
     /// </summary>
@@ -261,17 +287,7 @@ public class RadialMenu : MonoBehaviour
         }
     }
 
-    private void ExecuteTool3()
-    {
-        // Logic for Tool 3
-        Debug.Log("Tool 3 activated");
-    }
-
-    private void ExecuteTool4()
-    {
-        // Logic for Tool 4
-        Debug.Log("Tool 4 activated");
-    }
+   
 
     #endregion
 
