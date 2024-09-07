@@ -1439,6 +1439,30 @@ PrefabInstance:
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetActive
       objectReference: {fileID: 0}
+    - target: {fileID: 6161526852454814128, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6161526852454814128, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7860366244617368446}
+    - target: {fileID: 6161526852454814128, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 6161526852454814128, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6161526852454814128, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6161526852454814128, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 7433062367204986318, guid: c06b441174e806642bcfd072f0a0cd90, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1598,6 +1622,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33608f4ee7e359549bd154e1f4d9ae9c, type: 3}
+--- !u!1 &7860366244617368446 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5004701275879680649, guid: 33608f4ee7e359549bd154e1f4d9ae9c, type: 3}
+  m_PrefabInstance: {fileID: 7860366244617368445}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8695037038337192128
 PrefabInstance:
   m_ObjectHideFlags: 0
