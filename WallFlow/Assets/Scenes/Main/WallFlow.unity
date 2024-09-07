@@ -12257,6 +12257,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GPTGenerator
       objectReference: {fileID: 0}
+    - target: {fileID: 4888957216015224348, guid: 7ff201aa1dc2e514984c564bcfdb5d87, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7247241368486065072, guid: 7ff201aa1dc2e514984c564bcfdb5d87, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
