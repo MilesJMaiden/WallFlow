@@ -2,13 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
-using TMPro; // TextMeshPro 네임스페이스 추가
+using TMPro;
 
 namespace OpenAI
 {
     public class DallE : MonoBehaviour
     {
-        [SerializeField] private TMP_InputField inputField; // 기존 InputField를 TMP_InputField로 변경
+        [SerializeField] private TMP_InputField inputField;
         [SerializeField] private Button button;
         [SerializeField] private Image image;
         [SerializeField] private GameObject loadingLabel;
@@ -20,23 +20,11 @@ namespace OpenAI
             button.onClick.AddListener(SendImageRequest);
         }
 
-        private void Update()
-        {
-            // I 키 입력을 감지하여 버튼 클릭 이벤트 발생
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                Debug.Log("I key pressed! Simulating button click.");
-                button.onClick.Invoke();  // 버튼의 클릭 이벤트 호출
-            }
-        }
-
         public void SetInputFieldText(string transcription)
         {
-            // VoiceManager에서 받은 텍스트를 TMP_InputField에 설정
             inputField.text = transcription;
             Debug.Log("DallE: Text received from VoiceManager: " + transcription);
 
-            // 이미지를 생성하기 위한 요청 시작
             SendImageRequest();
         }
 
@@ -49,7 +37,7 @@ namespace OpenAI
 
             var response = await openai.CreateImage(new CreateImageRequest
             {
-                Prompt = inputField.text, // TMP_InputField의 텍스트 사용
+                Prompt = inputField.text,
                 Size = ImageSize.Size256
             });
 
