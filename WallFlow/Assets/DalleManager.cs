@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using TMPro;
 using Oculus.Voice;
 using System.Reflection;
 using Meta.WitAi.CallbackHandlers;
@@ -14,7 +13,6 @@ public class DalleManager : MonoBehaviour
     [Header("Wit Configuration")]
     [SerializeField] private AppVoiceExperience appVoiceExperience;
     [SerializeField] private WitResponseMatcher responseMatcher;
-    [SerializeField] private TextMeshProUGUI transcriptionText;
 
     [Header("Prefab Settings")]
     [SerializeField] private GameObject resultPrefab; // The UI prefab to instantiate
@@ -84,7 +82,7 @@ public class DalleManager : MonoBehaviour
     private void OnPartialTranscription(string transcription)
     {
         if (!_voiceCommandReady) return;
-        transcriptionText.text = transcription;
+        // Handle partial transcription if needed (currently not used).
     }
 
     private void OnFullTranscription(string transcription)
@@ -93,7 +91,7 @@ public class DalleManager : MonoBehaviour
         _voiceCommandReady = false;
         completeTranscription?.Invoke(transcription);
 
-        // Spawn the prefab and pass transcription to DallE script
+        // Spawn the prefab and pass transcription to DallEHandler
         SpawnPrefabAndSetTranscription(transcription);
     }
 
@@ -103,7 +101,7 @@ public class DalleManager : MonoBehaviour
         GameObject resultUI = Instantiate(resultPrefab);
         PositionPrefabInFrontOfPlayer(resultUI);
 
-        // Access the DallE handler from the prefab
+        // Access the DallEHandler from the prefab
         DallEHandler dallEHandler = resultUI.GetComponent<DallEHandler>();
         if (dallEHandler != null)
         {
