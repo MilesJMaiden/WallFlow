@@ -1,63 +1,71 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
 using Oculus.Voice;
 using System.Reflection;
 using Meta.WitAi.CallbackHandlers;
 using OpenAI;
-using UnityEngine.Networking;
-using System.Threading.Tasks;
 
+[RequireComponent(typeof(AppVoiceExperience))]
 public class DalleManager : MonoBehaviour
 {
+    #region Inspector Variables
+
     [Header("Wit Configuration")]
+    [Tooltip("The voice experience component for handling voice commands.")]
     [SerializeField] private AppVoiceExperience appVoiceExperience;
+
+    [Tooltip("Response matcher for detecting specific voice commands.")]
     [SerializeField] private WitResponseMatcher responseMatcher;
 
     [Header("Prefab Settings")]
-    [SerializeField] private GameObject resultPrefab; // The UI prefab to instantiate
-    [SerializeField] private Camera mainCamera; // Reference to the player's main camera (headset)
+    [Tooltip("The UI prefab to instantiate for displaying the result.")]
+    [SerializeField] private GameObject resultPrefab;
+
+    [Tooltip("Reference to the player's main camera, typically the VR headset.")]
+    [SerializeField] private Camera mainCamera;
 
     [Header("Voice Events")]
+    [Tooltip("Event triggered when the wake word is detected.")]
     [SerializeField] private UnityEvent wakeWordDetected;
+
+    [Tooltip("Event triggered when the transcription is completed.")]
     [SerializeField] private UnityEvent<string> completeTranscription;
+
+    #endregion
+
+    #region Private Variables
 
     private bool _voiceCommandReady;
     private bool isFirstDeactivationDone = false;
 
-    private void Start()
-    {
-        if (!isFirstDeactivationDone)
-        {
-            isFirstDeactivationDone = true;
-        }
-    }
+    #endregion
 
-    private void Update()
-    {
-        ReactivateVoice();
+    #region Unity Callbacks
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ReactivateVoice();
-        }
-    }
-
+    /// <summary>
+    /// Initializes necessary components on Awake.
+    /// </summary>
     private void Awake()
     {
+        // Listen for voice events
         appVoiceExperience.VoiceEvents.OnRequestCompleted.AddListener(ReactivateVoice);
         appVoiceExperience.VoiceEvents.OnPartialTranscription.AddListener(OnPartialTranscription);
         appVoiceExperience.VoiceEvents.OnFullTranscription.AddListener(OnFullTranscription);
 
+        // Access private event field from WitResponseMatcher
         var eventField = typeof(WitResponseMatcher).GetField("onMultiValueEvent", BindingFlags.NonPublic | BindingFlags.Instance);
         if (eventField != null && eventField.GetValue(responseMatcher) is MultiValueEvent onMultiValueEvent)
         {
             onMultiValueEvent.AddListener(WakeWordDetected);
         }
 
+        // Activate voice input
         appVoiceExperience.Activate();
     }
 
+    /// <summary>
+    /// Handles destruction and removes listeners when the object is destroyed.
+    /// </summary>
     private void OnDestroy()
     {
         appVoiceExperience.VoiceEvents.OnRequestCompleted.RemoveListener(ReactivateVoice);
@@ -71,41 +79,83 @@ public class DalleManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Runs logic that should happen at the start of the application.
+    /// </summary>
+    private void Start()
+    {
+        if (!isFirstDeactivationDone)
+        {
+            isFirstDeactivationDone = true;
+        }
+    }
+
+    /// <summary>
+    /// Updates the object each frame to check for manual voice reactivation.
+    /// </summary>
+    private void Update()
+    {
+        ReactivateVoice();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ReactivateVoice();
+        }
+    }
+
+    #endregion
+
+    #region Voice Command Handlers
+
+    /// <summary>
+    /// Reactivates the voice input to await new commands.
+    /// </summary>
     public void ReactivateVoice() => appVoiceExperience.Activate();
 
-    private void WakeWordDetected(string[] arg0)
+    /// <summary>
+    /// Called when the wake word is detected.
+    /// </summary>
+    private void WakeWordDetected(string[] args)
     {
         _voiceCommandReady = true;
         wakeWordDetected?.Invoke();
     }
 
+    /// <summary>
+    /// Handles partial transcription from voice input (not used currently).
+    /// </summary>
     private void OnPartialTranscription(string transcription)
     {
         if (!_voiceCommandReady) return;
-        // Handle partial transcription if needed (currently not used).
     }
 
+    /// <summary>
+    /// Handles full transcription and spawns the result prefab with the transcription text.
+    /// </summary>
     private void OnFullTranscription(string transcription)
     {
         if (!_voiceCommandReady) return;
         _voiceCommandReady = false;
         completeTranscription?.Invoke(transcription);
 
-        // Spawn the prefab and pass transcription to DallEHandler
         SpawnPrefabAndSetTranscription(transcription);
     }
 
+    #endregion
+
+    #region Prefab Management
+
+    /// <summary>
+    /// Spawns the result prefab and sets the transcription on the DallEHandler.
+    /// </summary>
     private void SpawnPrefabAndSetTranscription(string transcription)
     {
-        // Instantiate the prefab in front of the player's head
         GameObject resultUI = Instantiate(resultPrefab);
         PositionPrefabInFrontOfPlayer(resultUI);
 
-        // Access the DallEHandler from the prefab
         DallEHandler dallEHandler = resultUI.GetComponent<DallEHandler>();
         if (dallEHandler != null)
         {
-            dallEHandler.SetInputFieldText(transcription);
+            dallEHandler.GenerateImageFromText(transcription, OnImageGenerated);
         }
         else
         {
@@ -113,26 +163,29 @@ public class DalleManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Callback invoked when the image is successfully generated and loaded.
+    /// </summary>
+    private void OnImageGenerated()
+    {
+        // Disable the DalleManager only after the image is loaded and displayed
+        gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Positions the result prefab in front of the player.
+    /// </summary>
     private void PositionPrefabInFrontOfPlayer(GameObject prefab)
     {
-        // Ensure mainCamera is assigned
-        if (mainCamera == null)
-        {
-            mainCamera = Camera.main; // Fallback to main camera
-            if (mainCamera == null)
-            {
-                Debug.LogError("Main camera is not assigned and could not be found.");
-                return;
-            }
-        }
+        if (mainCamera == null) mainCamera = Camera.main;
 
-        // Position 1.5 meters in front of the player's head
         Vector3 forwardPosition = mainCamera.transform.position + mainCamera.transform.forward * 1.5f;
-
-        // Set the prefab position
         prefab.transform.position = forwardPosition;
 
-        // Rotate the prefab to face the player
-        prefab.transform.rotation = Quaternion.LookRotation(mainCamera.transform.forward, Vector3.up);
+        Vector3 lookDirection = mainCamera.transform.forward;
+        lookDirection.y = 0; // Ensure it only rotates horizontally
+        prefab.transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
     }
+
+    #endregion
 }

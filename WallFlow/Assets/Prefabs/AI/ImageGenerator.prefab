@@ -49,7 +49,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   appVoiceExperience: {fileID: 6410217845448750773}
   responseMatcher: {fileID: 8785214885221021808}
-  transcriptionText: {fileID: 0}
   resultPrefab: {fileID: 5069762493552362314, guid: 465c6cd8ecaf62346a86b4c68481f624, type: 3}
   mainCamera: {fileID: 0}
   wakeWordDetected:

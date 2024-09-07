@@ -10105,10 +10105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df102b3e075309949914aff48552addd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aiResultImage: {fileID: 0}
   inputField: {fileID: 0}
-  generateButton: {fileID: 0}
-  loadingLabel: {fileID: 0}
+  image: {fileID: 3049155100928524462}
+  loadingLabel: {fileID: 5655455362366940101}
 --- !u!1 &5094937229529004014
 GameObject:
   m_ObjectHideFlags: 0
@@ -14341,7 +14340,7 @@ GameObject:
   - component: {fileID: 6094687946333556573}
   - component: {fileID: 3049155100928524462}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Output img
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
