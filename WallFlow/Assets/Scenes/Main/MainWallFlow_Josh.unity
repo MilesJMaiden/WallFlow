@@ -359,6 +359,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ff201aa1dc2e514984c564bcfdb5d87, type: 3}
+--- !u!1 &249291799 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4888957216015224348, guid: 7ff201aa1dc2e514984c564bcfdb5d87, type: 3}
+  m_PrefabInstance: {fileID: 249291798}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &394081250
 GameObject:
   m_ObjectHideFlags: 0
@@ -1426,10 +1431,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1822309808455829106, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 8695037038337192129}
     - target: {fileID: 4610034068036545570, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
       propertyPath: m_Name
       value: ToolBelt
       objectReference: {fileID: 0}
+    - target: {fileID: 7813298436155088456, guid: 43e60f0a9d104b14d9b6d7fc7354b840, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 249291799}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1520,6 +1533,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 799a0fc308cef134ca28007e5d585ce3, type: 3}
+--- !u!1 &8695037038337192129 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4716778382369840857, guid: 799a0fc308cef134ca28007e5d585ce3, type: 3}
+  m_PrefabInstance: {fileID: 8695037038337192128}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
