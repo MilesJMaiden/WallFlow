@@ -201,7 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d920d7b35356849a04c5235ef3629d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPrefabButton: 0
+  spawnPrefabButton: 8192
   prefabs:
   - {fileID: 7628909544489950333, guid: 721a76547a0d9234d9690dfd6e45bc86, type: 3}
   - {fileID: 3202306037386345504, guid: 57049d492c3be3442abf19c63af071df, type: 3}
