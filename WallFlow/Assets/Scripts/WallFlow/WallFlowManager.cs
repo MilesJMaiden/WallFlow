@@ -56,8 +56,12 @@ public class WallFlowManager : MonoBehaviour
                 boundsClipper = surface.GetComponent<BoundsClipper>();
             }
 
-            // Find the BoxCollider attached to the wallFlowPrefab
-            wallFlowCollider = wallFlowInstance.GetComponent<BoxCollider>();
+            // Find the BoxCollider attached to the "ManagerMai" child object
+            var managerMai = wallFlowInstance.transform.Find("ManagerMai");
+            if (managerMai != null)
+            {
+                wallFlowCollider = managerMai.GetComponent<BoxCollider>();
+            }
 
             if (canvasRect == null || boundsClipper == null || wallFlowCollider == null)
             {
@@ -105,7 +109,7 @@ public class WallFlowManager : MonoBehaviour
         // Apply the adjusted size to the 'Surface' BoundsClipper component
         boundsClipper.Size = new Vector3(canvasRect.sizeDelta.x, canvasRect.sizeDelta.y, 0.001f); // Match RectTransform and set Z to 0.001
 
-        // Scale the BoxCollider of the wallFlowInstance to match the size of the wallFlowInstance, only adjusting x and y
+        // Scale the BoxCollider of the "ManagerMai" child object to match the size of the wallFlowInstance, only adjusting x and y
         if (wallFlowCollider != null)
         {
             Vector3 newColliderSize = new Vector3(canvasRect.sizeDelta.x, canvasRect.sizeDelta.y, wallFlowCollider.size.z); // Keep Z axis unchanged
