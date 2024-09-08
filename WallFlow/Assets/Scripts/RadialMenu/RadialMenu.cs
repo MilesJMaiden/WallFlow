@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using Meta.WitAi;
 
 public class RadialMenu : MonoBehaviour
 {
@@ -27,9 +28,6 @@ public class RadialMenu : MonoBehaviour
     [Tooltip("Transform of the hand to position the radial menu.")]
     public Transform handTransform;
 
-    [Tooltip("Event triggered when a segment is selected.")]
-    public UnityEvent<int> onSegmentSelected;
-
     [Tooltip("Icons for each segment of the radial menu.")]
     public Sprite[] segmentIcons;
 
@@ -39,17 +37,18 @@ public class RadialMenu : MonoBehaviour
     [Header("Tool References")]
     [Tooltip("Prefab reference for the Audio Capture Tool.")]
     [SerializeField]
-    private GameObject audioCaptureToolPrefab;
+    private GameObject dalleE;
 
-    [Tooltip("Reference to the Audio Capture Tool in the scene.")]
     [SerializeField]
-    private AudioCaptureTool audioCaptureTool;
-
-    [Tooltip("Reference to the Prefab Spawner in the scene.")]
-    public SimplePrefabSpawner prefabSpawnerTool;
-
-    [Tooltip("Reference to the Prefab Spawner GameObject in the scene.")]
-    public GameObject prefabSpawnerToolObject;
+    private GameObject alien;
+    [SerializeField]
+    private GameObject GPT;
+    [SerializeField]
+    private GameObject objectSpawner;
+    [SerializeField]
+    private GameObject passThrough;
+    [SerializeField]
+    private GameObject AIPrompt;
 
     [Header("Testing Keyboard Shortcuts")]
     [Tooltip("Key to simulate selection of the first radial menu segment (Audio Capture Tool).")]
@@ -73,6 +72,11 @@ public class RadialMenu : MonoBehaviour
     /// Handles input for showing the radial menu and selecting segments.
     /// Also handles test keys for activating/deactivating tools.
     /// </summary>
+    /// 
+    private void Start()
+    {
+        SpawnRadialMenu();
+    }
     void Update()
     {
         HandleRadialMenuInput();
@@ -200,23 +204,25 @@ public class RadialMenu : MonoBehaviour
     /// </summary>
     public void HideAndTriggerSelected()
     {
-        onSegmentSelected.Invoke(currentSelectedRadialSegment);
         radialSegmentCanvas.gameObject.SetActive(false);
 
         // Execute logic based on the selected segment
         switch (currentSelectedRadialSegment)
         {
             case 0:
-                ExecuteAudioCaptureTool();
+                ExecuteDallETool();
                 break;
             case 1:
-                ExecutePrefabSpawnerTool();
+                ExecuteGPTTool();
                 break;
             case 2:
-                ExecuteDalleTool();
+                ExecuteObjectSpawnerTool();
                 break;
             case 3:
-                ExecuteGPTTool();
+                ExecuteSpawnAlien();
+                break;
+            case 4:
+                ExecutePassthroughTool();
                 break;
             // Add more cases if you have more segments
             default:
@@ -232,62 +238,112 @@ public class RadialMenu : MonoBehaviour
     /// <summary>
     /// Executes the Audio Capture Tool.
     /// </summary>
-    private void ExecuteAudioCaptureTool()
+    private void ExecuteDallETool()
     {
-        if (audioCaptureTool != null)
+        if (dalleE != null)
         {
-            audioCaptureTool.ActivateTool(); // Activate the AudioCaptureTool
-            Debug.Log("Audio Capture Tool activated");
+            dalleE.SetActive(true);
+            Debug.Log("DallE Tool activated");
+
+            // Activate the canvas using the AIPrompt's CanvasTweener component
+            ActivateAIPromptCanvas();
         }
         else
         {
-            Debug.LogError("AudioCaptureTool reference is not set in the Inspector.");
+            Debug.LogError("DalleE reference is not set in the Inspector.");
         }
     }
 
-    private void ExecuteDalleTool()
+    private void ExecuteSpawnAlien()
     {
-        if (audioCaptureTool != null)
+        if (alien != null)
         {
-            audioCaptureTool.ActivateDalle(); // Activate the AudioCaptureTool
-            Debug.Log("Audio Capture Tool activated");
+            alien.SetActive(true);
+            Debug.Log("Alien Tool activated");
         }
         else
         {
-            Debug.LogError("AudioCaptureTool reference is not set in the Inspector.");
+            Debug.LogError("Alien reference is not set in the Inspector.");
+        }
+    }
+
+    private void ExecutePassthroughTool()
+    {
+        if (passThrough != null)
+        {
+            // Get the PassthroughFaderUnderlay component from the passThrough object
+            PassthroughFaderUnderlay passthroughFader = passThrough.GetComponent<PassthroughFaderUnderlay>();
+
+            // Check if the component exists
+            if (passthroughFader != null)
+            {
+                // Call the TogglePassthrough method
+                passthroughFader.TogglePassthrough();
+                Debug.Log("Passthrough Tool toggled.");
+            }
+            else
+            {
+                Debug.LogError("PassthroughFaderUnderlay component not found on the passThrough object.");
+            }
+        }
+        else
+        {
+            Debug.LogError("PassThrough reference is not set in the Inspector.");
+        }
+    }
+
+
+    private void ExecuteObjectSpawnerTool()
+    {
+        if (objectSpawner != null)
+        {
+            objectSpawner.SetActive(true);
+            Debug.Log("Object spawner Tool activated");
+        }
+        else
+        {
+            Debug.LogError("Object spawner reference is not set in the Inspector.");
         }
     }
 
     private void ExecuteGPTTool()
     {
-        if (audioCaptureTool != null)
+        if (GPT != null)
         {
-            audioCaptureTool.ActivateGPT(); // Activate the AudioCaptureTool
-            Debug.Log("Audio Capture Tool activated");
+            GPT.SetActive(true);
+            Debug.Log("GPT Tool activated from Radial Menu.");
+
+            // Activate the canvas using the AIPrompt's CanvasTweener component
+            ActivateAIPromptCanvas();
         }
         else
         {
-            Debug.LogError("AudioCaptureTool reference is not set in the Inspector.");
+            Debug.LogError("GPT reference is not set in the Inspector.");
         }
     }
 
-    /// <summary>
-    /// Executes the Prefab Spawner Tool by activating it in the scene.
-    /// </summary>
-    private void ExecutePrefabSpawnerTool()
+    // Method to activate the canvas using the AIPrompt's CanvasTweener component
+    private void ActivateAIPromptCanvas()
     {
-        if (prefabSpawnerTool != null)
+        if (AIPrompt != null)
         {
-            prefabSpawnerTool.ActivateTool(); // Activate the Prefab Spawner Tool
-            Debug.Log("Prefab Spawner Tool activated from Radial Menu.");
+            CanvasTweener canvasTweener = AIPrompt.GetComponent<CanvasTweener>();
+
+            if (canvasTweener != null)
+            {
+                canvasTweener.ActivateCanvas();
+                Debug.Log("AIPrompt canvas activated.");
+            }
+            else
+            {
+                Debug.LogError("CanvasTweener component not found on AIPrompt object.");
+            }
         }
         else
         {
-            Debug.LogError("PrefabSpawnerTool reference is not set in the Inspector.");
+            Debug.LogError("AIPrompt reference is not set in the Inspector.");
         }
     }
-
-   
 
     #endregion
 

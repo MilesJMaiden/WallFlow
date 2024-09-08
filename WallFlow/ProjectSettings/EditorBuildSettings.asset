@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/Main/WallFlow.unity
+    path: Assets/Scenes/Main/OLD/WallFlow.unity
     guid: 37f9ce121fd38b2408e834766d39b526
   - enabled: 1
-    path: Assets/Scenes/Main/WallFlow_Jake.unity
+    path: Assets/Scenes/Main/OLD/WallFlow_Jake.unity
     guid: bcb9f0de8c248aa45bb52fbef52ddd1a
   - enabled: 0
     path: Assets/_MRMotifs/PassthroughTransitioning/Scenes/PassthroughFaderSlider.unity
