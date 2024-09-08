@@ -7,6 +7,8 @@ using UnityEngine.Rendering;
 public class ColorTransfer : MonoBehaviour
 {
     [SerializeField]
+    private BoxCollider cubeCol;
+    [SerializeField]
     private MeshRenderer meshRenderer;
     [SerializeField]
     private LineDrawing lineDrawing;
@@ -19,7 +21,7 @@ public class ColorTransfer : MonoBehaviour
     {
         // Get the SpriteRenderer component attached to this GameObject
         meshRenderer = GetComponent<MeshRenderer>();
-        //storedColor = meshRenderer.material.color;
+        cubeCol = GetComponent<BoxCollider>();
 
     }
 
