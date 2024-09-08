@@ -73,10 +73,6 @@ public class RadialMenu : MonoBehaviour
     /// Also handles test keys for activating/deactivating tools.
     /// </summary>
     /// 
-    private void Start()
-    {
-        SpawnRadialMenu();
-    }
     void Update()
     {
         HandleRadialMenuInput();
@@ -297,14 +293,27 @@ public class RadialMenu : MonoBehaviour
     {
         if (objectSpawner != null)
         {
-            objectSpawner.SetActive(true);
-            Debug.Log("Object spawner Tool activated");
+            // Get the SuperSimpleObjectSpawner component attached to the objectSpawner GameObject
+            SuperSimpleObjectSpawner spawner = objectSpawner.GetComponent<SuperSimpleObjectSpawner>();
+
+            // Check if the component exists
+            if (spawner != null)
+            {
+                // Call the SpawnRandomObject method
+                spawner.SpawnRandomObject();
+                Debug.Log("Object spawner tool executed: SpawnRandomObject called.");
+            }
+            else
+            {
+                Debug.LogError("SuperSimpleObjectSpawner component not found on the objectSpawner object.");
+            }
         }
         else
         {
             Debug.LogError("Object spawner reference is not set in the Inspector.");
         }
     }
+
 
     private void ExecuteGPTTool()
     {

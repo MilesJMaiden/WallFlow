@@ -11,8 +11,8 @@ public class AttachObject : MonoBehaviour
 
     public AudioSource audioSource;
 
-    public AudioClip acIn;
-    public AudioClip acOut;
+    //public AudioClip acIn;
+    //public AudioClip acOut;
 
     private void Start()
     {
@@ -42,7 +42,7 @@ public class AttachObject : MonoBehaviour
 
                 other.transform.root.SetParent(targetParent);
 
-                audioSource.PlayOneShot(acIn);
+                //audioSource.PlayOneShot(acIn);
 
             }
         }
@@ -65,7 +65,7 @@ public class AttachObject : MonoBehaviour
                     rb.isKinematic = false;
                     Debug.Log("Enabled Rigidbody for object: " + rb.gameObject.name);
                 }
-                audioSource.PlayOneShot(acOut);
+                //audioSource.PlayOneShot(acOut);
             }
         }
     }

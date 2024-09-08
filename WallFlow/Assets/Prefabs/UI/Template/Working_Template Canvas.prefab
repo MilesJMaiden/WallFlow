@@ -257,7 +257,7 @@ RectTransform:
   m_GameObject: {fileID: 4471556449178866560}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7193998720346701511}
@@ -831,8 +831,6 @@ MonoBehaviour:
   deteCol: {fileID: 0}
   targetParent: {fileID: 1639964213688840295}
   audioSource: {fileID: 6466576378929619031}
-  acIn: {fileID: 8300000, guid: 8c6097283101d3847af7651f5ce6c76b, type: 3}
-  acOut: {fileID: 8300000, guid: a6331723085fa3b4a8425051e3ad6059, type: 3}
 --- !u!82 &6466576378929619031
 AudioSource:
   m_ObjectHideFlags: 0
