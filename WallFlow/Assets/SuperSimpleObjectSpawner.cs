@@ -12,6 +12,19 @@ public class SuperSimpleObjectSpawner : MonoBehaviour
     [SerializeField] private AudioSource audioSource; // Audio source for playing sounds
     [SerializeField] private AudioClip spawnSound; // Sound to play when spawning an object
 
+    [Header("Input Settings")]
+    [Tooltip("Key to spawn an object manually.")]
+    [SerializeField] private KeyCode spawnKey = KeyCode.Space; // Default key to spawn objects
+
+    private void Update()
+    {
+        // Check if the spawn key is pressed
+        if (Input.GetKeyDown(spawnKey))
+        {
+            SpawnRandomObject();
+        }
+    }
+
     /// <summary>
     /// Spawns a random object from the array at the specified spawn point.
     /// </summary>
@@ -32,17 +45,19 @@ public class SuperSimpleObjectSpawner : MonoBehaviour
         // Select a random prefab from the array
         GameObject prefabToSpawn = prefabs[Random.Range(0, prefabs.Length)];
 
-        // Calculate spawn position in front of the spawn point
-        Vector3 spawnPosition = spawnPoint.position + spawnPoint.forward;
+        // Use the position, rotation, and scale of the spawnPoint for spawning
+        Vector3 spawnPosition = spawnPoint.position;
+        Quaternion spawnRotation = spawnPoint.rotation;
+        Vector3 spawnScale = prefabToSpawn.transform.localScale; // Using prefab's original scale
 
-        // Instantiate the prefab at the calculated position
-        GameObject spawnedObject = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
+        // Instantiate the prefab at the spawnPoint's position and rotation
+        GameObject spawnedObject = Instantiate(prefabToSpawn, spawnPosition, spawnRotation);
 
         // Set initial scale to zero for tweening effect
         spawnedObject.transform.localScale = Vector3.zero;
 
         // Tween the scale from 0 to the prefab's original scale using LeanTween
-        LeanTween.scale(spawnedObject, prefabToSpawn.transform.localScale, 0.5f).setEaseOutBounce();
+        LeanTween.scale(spawnedObject, spawnScale, 0.5f).setEaseOutBounce();
 
         // Play spawn sound
         if (audioSource != null && spawnSound != null)
@@ -53,8 +68,5 @@ public class SuperSimpleObjectSpawner : MonoBehaviour
         {
             Debug.LogWarning("AudioSource or spawn sound is not assigned.");
         }
-
-        // Rotate the object to face the same direction as the spawn point
-        spawnedObject.transform.rotation = Quaternion.LookRotation(spawnPoint.forward, Vector3.up);
     }
 }
