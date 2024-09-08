@@ -9,20 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Main/WallFlow.unity
     guid: 37f9ce121fd38b2408e834766d39b526
   - enabled: 1
-    path: Assets/Scenes/Main/WallFlow_Jake.unity
-    guid: bcb9f0de8c248aa45bb52fbef52ddd1a
-  - enabled: 0
-    path: Assets/_MRMotifs/PassthroughTransitioning/Scenes/PassthroughFaderSlider.unity
-    guid: 54bfdb8f613415b499ba62dd59ac97fd
-  - enabled: 0
-    path: Assets/_MRMotifs/PassthroughTransitioning/Scenes/PassthroughFaderUnderlay.unity
-    guid: c439005c7779b504eb4ddab2b5fc7697
-  - enabled: 0
-    path: Assets/_MRMotifs/PassthroughTransitioning/_Samples/Scenes/PassthroughFaderDissolve.unity
-    guid: 04d3df86ffb21854da9450263eea9bb2
-  - enabled: 0
-    path: Assets/_MRMotifs/PassthroughTransitioning/_Samples/Scenes/PassthroughFaderSelective.unity
-    guid: 363c627f547d14a42b49676510598eff
+    path: Assets/Scenes/Main/MainWallFlow_Pen.unity
+    guid: 60e06a0ca1ea48547ac1c57154f95fa5
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 1afc3721ecc366349b1adb9f62555622, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 8189c844c2978ca4f95e21445b7a2669, type: 2}
