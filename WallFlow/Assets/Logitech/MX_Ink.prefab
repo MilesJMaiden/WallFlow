@@ -31,7 +31,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7920969980687411610}
-  - {fileID: 1728428752291053010}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4014782369789234104
@@ -56,68 +55,6 @@ MonoBehaviour:
   active_color: {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 1}
   double_tap_active_color: {r: 0, g: 1, b: 1, a: 1}
   default_color: {r: 0.14150941, g: 0.13550194, b: 0.13550194, a: 1}
---- !u!1001 &1186177022340913721
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1857229286467065778}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.08
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071067
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-      propertyPath: m_Name
-      value: 2024_XRHI_PenModel_mdl
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
---- !u!4 &1728428752291053010 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 32405f61bef8f6649ac01d63396a107d, type: 3}
-  m_PrefabInstance: {fileID: 1186177022340913721}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8414709874766261035
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -129,10 +66,6 @@ PrefabInstance:
     - target: {fileID: 1324109529956063243, guid: 90df24c7a15784ca7a0a300d072cba39, type: 3}
       propertyPath: m_Name
       value: logitech_vr_stylus_v1.0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1324109529956063243, guid: 90df24c7a15784ca7a0a300d072cba39, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1813822785949909681, guid: 90df24c7a15784ca7a0a300d072cba39, type: 3}
       propertyPath: m_LocalPosition.x
