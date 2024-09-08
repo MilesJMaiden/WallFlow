@@ -73,10 +73,6 @@ public class RadialMenu : MonoBehaviour
     /// Also handles test keys for activating/deactivating tools.
     /// </summary>
     /// 
-    private void Start()
-    {
-        SpawnRadialMenu();
-    }
     void Update()
     {
         HandleRadialMenuInput();
