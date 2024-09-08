@@ -6,7 +6,6 @@ using System.Collections;
 public class WallFlowManager : MonoBehaviour
 {
     public GameObject wallFlowPrefab; // Reference to the WallFlow prefab
-    public float wallPadding = 0.1f;  // Padding for the canvas size relative to the wall
     public float canvasOffset = 0.01f; // Offset distance to move the canvas forward to avoid Z-fighting
     public KeyCode toggleCanvasKey = KeyCode.Q; // Key to toggle canvas active state for testing
 
@@ -69,8 +68,8 @@ public class WallFlowManager : MonoBehaviour
                 yield break;
             }
 
-            // Adjust the canvas to match the selected wall's position and size
-            AnchorCanvasToWall(wallScale);
+            // Adjust the canvas to match the selected wall's position
+            AnchorCanvasToWall();
         }
         else
         {
@@ -92,29 +91,11 @@ public class WallFlowManager : MonoBehaviour
         }
     }
 
-    private void AnchorCanvasToWall(Vector2 wallScale)
+    private void AnchorCanvasToWall()
     {
         // Position the canvas to the selected wall's position and adjust its rotation
         wallFlowInstance.transform.position = selectedWall.GetAnchorCenter() + selectedWall.transform.forward * canvasOffset;
         wallFlowInstance.transform.rotation = selectedWall.transform.rotation;
-
-        // Calculate the scale based on the wall size and apply padding
-        Vector2 adjustedScale = new Vector2(
-            wallScale.x * (1 - wallPadding),
-            wallScale.y * (1 - wallPadding));
-
-        // Apply the adjusted size to the Canvas RectTransform
-        canvasRect.sizeDelta = adjustedScale; // Set the size of the Canvas to match the adjusted wall scale
-
-        // Apply the adjusted size to the 'Surface' BoundsClipper component
-        boundsClipper.Size = new Vector3(canvasRect.sizeDelta.x, canvasRect.sizeDelta.y, 0.001f); // Match RectTransform and set Z to 0.001
-
-        // Scale the BoxCollider of the "ManagerMai" child object to match the size of the wallFlowInstance, only adjusting x and y
-        if (wallFlowCollider != null)
-        {
-            Vector3 newColliderSize = new Vector3(canvasRect.sizeDelta.x, canvasRect.sizeDelta.y, wallFlowCollider.size.z); // Keep Z axis unchanged
-            wallFlowCollider.size = newColliderSize;
-        }
     }
 
     private MRUKAnchor FindLargestWall(out Vector2 largestWallScale)
@@ -167,3 +148,4 @@ public class WallFlowManager : MonoBehaviour
         return largestWall;
     }
 }
+
