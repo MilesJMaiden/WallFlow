@@ -7,7 +7,6 @@ public class SuperSimpleObjectSpawner : MonoBehaviour
 
     [Header("Spawn Settings")]
     [SerializeField] private Transform spawnPoint; // Reference transform for spawning objects
-    [SerializeField] private float spawnDistance = 1.5f; // Distance in front of the spawn point to spawn the object
 
     [Header("Audio Settings")]
     [SerializeField] private AudioSource audioSource; // Audio source for playing sounds
@@ -34,7 +33,7 @@ public class SuperSimpleObjectSpawner : MonoBehaviour
         GameObject prefabToSpawn = prefabs[Random.Range(0, prefabs.Length)];
 
         // Calculate spawn position in front of the spawn point
-        Vector3 spawnPosition = spawnPoint.position + spawnPoint.forward * spawnDistance;
+        Vector3 spawnPosition = spawnPoint.position + spawnPoint.forward;
 
         // Instantiate the prefab at the calculated position
         GameObject spawnedObject = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
