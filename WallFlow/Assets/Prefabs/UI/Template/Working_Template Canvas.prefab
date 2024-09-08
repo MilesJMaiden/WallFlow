@@ -828,7 +828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7dbf3afccd21234581cd29427c4a551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deteCollider: {fileID: 0}
+  deteCol: {fileID: 0}
   targetParent: {fileID: 1639964213688840295}
   audioSource: {fileID: 6466576378929619031}
   acIn: {fileID: 8300000, guid: 8c6097283101d3847af7651f5ce6c76b, type: 3}
@@ -1141,7 +1141,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &1741181716205556051
 MonoBehaviour:
   m_ObjectHideFlags: 0
