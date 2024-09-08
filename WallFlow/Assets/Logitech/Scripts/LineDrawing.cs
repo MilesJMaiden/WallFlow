@@ -15,6 +15,9 @@ public class LineDrawing : MonoBehaviour
     [SerializeField] Material _material;
 
     [SerializeField] private Color _currentColor;
+
+    public ColorTransfer colorTransfer;
+
     public Color CurrentColor
     {
         get { return _currentColor; }
@@ -155,5 +158,9 @@ public class LineDrawing : MonoBehaviour
         {
             _doubleTapDetected = false;
         }
+
+        _currentColor = colorTransfer.storedColor;
     }
+
+
 }
